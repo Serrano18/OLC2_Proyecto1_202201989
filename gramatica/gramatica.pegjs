@@ -1,25 +1,6 @@
 {
-  const CrearNodo = (tipoNodo, props) =>{
-    const tipos = {
-        'primitivo': nodos.Primitivo,
-        'OpAritmetica': nodos.OperacionAritmetica,
-        'OpRelacional': nodos.OperacionRelacional,
-        'OpIgualdades': nodos.OperacionIgualdades,
-        'OpLogica': nodos.OperacionLogica,
-        'OpTernario': nodos.Ternario,
-        'unaria': nodos.OperacionUnaria,
-        'Agrupacion': nodos.Agrupacion,
-        'DeclaracionVar': nodos.DeclaracionVariable,
-        'ReferenciaVariable': nodos.ReferenciaVariable,
-        'print': nodos.Print
-    }
-
-    const nodo = new tipos[tipoNodo](props)
-    nodo.location = location()
-    return nodo
-  }
+    const CrearNodo = (tipo, props)
 }
-
 
 programa = _ dcl:instucciones* _ { return dcl }
 
