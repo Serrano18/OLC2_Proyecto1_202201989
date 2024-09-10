@@ -15,6 +15,11 @@ export function dvariable (exp,tipo,id){
             //error de tipo no reconocido
         }
     }
+    if(tipo == 'float'){
+        if(exp.tipo == 'int'){
+            return new Primitivo({valor: parseFloat(exp.valor) , tipo: tipo});
+        }
+    }
 
     if (tipo == 'var'){
         //var id = exp

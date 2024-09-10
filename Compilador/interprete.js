@@ -5,6 +5,7 @@ import { relacionales } from "../Expresiones/relacionales.js";
 import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
+import { Primitivo } from "../Compilador/nodos.js";
 
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
@@ -63,7 +64,7 @@ export class InterpreterVisitor extends BaseVisitor{
     */
     visitTernario(node){
         const condicion = node.condicion.accept(this)
-        if(condicion.tipo !== 'boolean'){
+        if(condicion.tipo === 'boolean'){
             if(condicion.valor){
                 return node.verdadero.accept(this)
             }else{

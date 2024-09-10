@@ -294,7 +294,7 @@ function peg$parse(input, options) {
   var peg$f22 = function(exp) {return  nuevoNodo('Agrupacion', { exp })};
   var peg$f23 = function() {return  nuevoNodo('Primitivo', { tipo: 'int', valor: parseInt(text()) })};
   var peg$f24 = function() {return  nuevoNodo('Primitivo', { tipo: 'float', valor: parseFloat(text()) })};
-  var peg$f25 = function() {return  nuevoNodo('Primitivo', { tipo: 'booean', valor: text() === 'true' ? true : false })};
+  var peg$f25 = function() {return  nuevoNodo('Primitivo', { tipo: 'boolean', valor: text() === 'true' ? true : false })};
   var peg$f26 = function() {return  nuevoNodo('Primitivo', { tipo: 'string', valor: text().slice(1, -1) })};
   var peg$f27 = function() {return  nuevoNodo('Primitivo', { tipo: 'char', valor: text().slice(1, -1) })};
   var peg$f28 = function(id) {return  nuevoNodo('ReferenciaVariable', {id})};
@@ -672,38 +672,39 @@ function peg$parse(input, options) {
   }
 
   function peg$parseternario() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
+    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 
     s0 = peg$currPos;
-    s1 = peg$parseOR();
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
+    s1 = peg$parse_();
+    s2 = peg$parseOR();
+    if (s2 !== peg$FAILED) {
+      s3 = peg$parse_();
       if (input.charCodeAt(peg$currPos) === 63) {
-        s3 = peg$c6;
+        s4 = peg$c6;
         peg$currPos++;
       } else {
-        s3 = peg$FAILED;
+        s4 = peg$FAILED;
         if (peg$silentFails === 0) { peg$fail(peg$e6); }
       }
-      if (s3 !== peg$FAILED) {
-        s4 = peg$parse_();
-        s5 = peg$parseternario();
-        if (s5 !== peg$FAILED) {
-          s6 = peg$parse_();
+      if (s4 !== peg$FAILED) {
+        s5 = peg$parse_();
+        s6 = peg$parseternario();
+        if (s6 !== peg$FAILED) {
+          s7 = peg$parse_();
           if (input.charCodeAt(peg$currPos) === 58) {
-            s7 = peg$c7;
+            s8 = peg$c7;
             peg$currPos++;
           } else {
-            s7 = peg$FAILED;
+            s8 = peg$FAILED;
             if (peg$silentFails === 0) { peg$fail(peg$e7); }
           }
-          if (s7 !== peg$FAILED) {
-            s8 = peg$parse_();
-            s9 = peg$parseternario();
-            if (s9 !== peg$FAILED) {
-              s10 = peg$parse_();
+          if (s8 !== peg$FAILED) {
+            s9 = peg$parse_();
+            s10 = peg$parseternario();
+            if (s10 !== peg$FAILED) {
+              s11 = peg$parse_();
               peg$savedPos = s0;
-              s0 = peg$f7(s1, s5, s9);
+              s0 = peg$f7(s2, s6, s10);
             } else {
               peg$currPos = s0;
               s0 = peg$FAILED;
@@ -1119,7 +1120,7 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
 
     s0 = peg$currPos;
-    s1 = peg$parseUnaria();
+    s1 = peg$parseUnarias();
     if (s1 !== peg$FAILED) {
       s2 = [];
       s3 = peg$currPos;
@@ -1133,7 +1134,7 @@ function peg$parse(input, options) {
       }
       if (s5 !== peg$FAILED) {
         s6 = peg$parse_();
-        s7 = peg$parseUnaria();
+        s7 = peg$parseUnarias();
         if (s7 !== peg$FAILED) {
           peg$savedPos = s3;
           s3 = peg$f18(s1, s5, s7);
@@ -1158,7 +1159,7 @@ function peg$parse(input, options) {
         }
         if (s5 !== peg$FAILED) {
           s6 = peg$parse_();
-          s7 = peg$parseUnaria();
+          s7 = peg$parseUnarias();
           if (s7 !== peg$FAILED) {
             peg$savedPos = s3;
             s3 = peg$f18(s1, s5, s7);
@@ -1181,7 +1182,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseUnaria() {
+  function peg$parseUnarias() {
     var s0, s1, s2, s3;
 
     s0 = peg$currPos;
@@ -1194,7 +1195,7 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
-      s3 = peg$parseUnaria();
+      s3 = peg$parseUnarias();
       if (s3 !== peg$FAILED) {
         peg$savedPos = s0;
         s0 = peg$f20(s3);
@@ -1217,7 +1218,7 @@ function peg$parse(input, options) {
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parse_();
-        s3 = peg$parseUnaria();
+        s3 = peg$parseUnarias();
         if (s3 !== peg$FAILED) {
           peg$savedPos = s0;
           s0 = peg$f21(s3);

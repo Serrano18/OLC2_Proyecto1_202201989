@@ -44,9 +44,9 @@ expresion = asignacion
 asignacion = ternario
 
 ternario 
-    = condicion: OR _ "?" _ verdadero:ternario _ ":" _ falso:ternario _ 
+    = _ condicion: OR _ "?" _ verdadero:ternario _ ":" _ falso:ternario _ 
         { return  nuevoNodo('OpTernario', { condicion, verdadero, falso }) }
-    / OR
+    / OR 
 
 //-------------------------------------------------OPERACIONES LOGICAS ------------------------------------------------
 OR 
@@ -78,13 +78,13 @@ Suma
         return expansion.reduce((Anterior,Actual) => {const { tipo, der } = Actual
         return  nuevoNodo('OpAritmetica', { op:tipo, izq: Anterior, der })},izq)}
 
-Multiplicacion = izq:Unaria expansion:(_ op:("*" / "/"/"%") _ der:Unaria { return { tipo: op, der } })* {
+Multiplicacion = izq:Unarias expansion:(_ op:("*" / "/"/"%") _ der:Unarias { return { tipo: op, der } })* {
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
         return  nuevoNodo('OpAritmetica', { op:tipo, izq: Anterior, der })},izq)}
 
-Unaria 
-    = "-" _ num:Unaria { return  nuevoNodo('Unaria', { op: '-', exp: num }) }
-    /"!" _ num:Unaria { return  nuevoNodo('OpLogica', { op: '!', izq: num, der:-1}) }
+Unarias 
+    = "-" _ num:Unarias { return  nuevoNodo('Unaria', { op: '-', exp: num }) }
+    /"!" _ num:Unarias { return  nuevoNodo('OpLogica', { op: '!', izq: num, der:-1}) }
     / datos
 
 // ------------------------------Datos primitivos----------------------------------
@@ -112,7 +112,7 @@ decimal
     = [0-9]+("."[0-9]+)     {return  nuevoNodo('Primitivo', { tipo: 'float', valor: parseFloat(text()) })}
         
 booleano 
-    = "true" / "false"  {return  nuevoNodo('Primitivo', { tipo: 'booean', valor: text() === 'true' ? true : false })}
+    = "true" / "false"  {return  nuevoNodo('Primitivo', { tipo: 'boolean', valor: text() === 'true' ? true : false })}
 
 cadena 
     = "\"" (!"\"" .)* "\""   {return  nuevoNodo('Primitivo', { tipo: 'string', valor: text().slice(1, -1) })}

@@ -29,8 +29,11 @@ export function aritmeticas(op,izq,der){
         '/':(izq,der)=> izq / der,
         '%':(izq,der)=> izq % der,
     }
-    const tiporesultante = tipo[2];
-    const valorresultante = operaciones[op](izq.valor,der.valor);
+    let tiporesultante = tipo[2];
+    let valorresultante = operaciones[op](izq.valor,der.valor);
+    if (tiporesultante === 'int' && valorresultante !== null){
+        valorresultante = parseInt(valorresultante);
+    }
     return new Primitivo({valor:valorresultante,tipo:tiporesultante});
    
 }
