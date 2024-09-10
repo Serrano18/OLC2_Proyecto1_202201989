@@ -1294,29 +1294,11 @@ function peg$parse(input, options) {
   }
 
   function peg$parsenumeros() {
-    var s0, s1, s2;
+    var s0;
 
-    s0 = peg$currPos;
-    s1 = peg$parseentero();
-    if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
-      s1 = [s1, s2];
-      s0 = s1;
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
-    }
+    s0 = peg$parseentero();
     if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-      s1 = peg$parsedecimal();
-      if (s1 !== peg$FAILED) {
-        s2 = peg$parse_();
-        s1 = [s1, s2];
-        s0 = s1;
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
+      s0 = peg$parsedecimal();
     }
 
     return s0;
@@ -1434,7 +1416,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parsebooleano() {
-    var s0, s1, s2;
+    var s0, s1;
 
     if (input.substr(peg$currPos, 4) === peg$c17) {
       s0 = peg$c17;
@@ -1453,13 +1435,10 @@ function peg$parse(input, options) {
         if (peg$silentFails === 0) { peg$fail(peg$e22); }
       }
       if (s1 !== peg$FAILED) {
-        s2 = peg$parse_();
         peg$savedPos = s0;
-        s0 = peg$f25();
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
+        s1 = peg$f25();
       }
+      s0 = s1;
     }
 
     return s0;
@@ -1561,7 +1540,6 @@ function peg$parse(input, options) {
         if (peg$silentFails === 0) { peg$fail(peg$e23); }
       }
       if (s3 !== peg$FAILED) {
-        s4 = peg$parse_();
         peg$savedPos = s0;
         s0 = peg$f26();
       } else {
@@ -1633,7 +1611,6 @@ function peg$parse(input, options) {
           if (peg$silentFails === 0) { peg$fail(peg$e25); }
         }
         if (s3 !== peg$FAILED) {
-          s4 = peg$parse_();
           peg$savedPos = s0;
           s0 = peg$f27();
         } else {
@@ -1653,18 +1630,15 @@ function peg$parse(input, options) {
   }
 
   function peg$parseidvalue() {
-    var s0, s1, s2;
+    var s0, s1;
 
     s0 = peg$currPos;
     s1 = peg$parseid();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parse_();
       peg$savedPos = s0;
-      s0 = peg$f28(s1);
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
+      s1 = peg$f28(s1);
     }
+    s0 = s1;
 
     return s0;
   }

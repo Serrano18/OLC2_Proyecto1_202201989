@@ -92,7 +92,7 @@ function run(){
         console.log({sentencias})
         for (let i = 0; i < sentencias.length; i++) {
             try{
-                if (sentencias[i].tipo !== undefined) {
+                if (sentencias[i] !== undefined) {
                     sentencias[i].accept(interprete);
                 }
                 salida.innerHTML = interprete?.salida || "";
