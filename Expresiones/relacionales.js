@@ -1,3 +1,4 @@
+import { Primitivo } from "../nodos.js";
 
 export function relacionales(op,izq,der){
        //Evaluar si los valores son null

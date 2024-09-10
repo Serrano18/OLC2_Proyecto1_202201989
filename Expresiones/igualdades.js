@@ -1,3 +1,5 @@
+import { Primitivo } from "../nodos.js";
+
 export function logicas(op,izq,der){
        //Evaluar si los valores son null
        if(izq.valor === null || der.valor === null){
