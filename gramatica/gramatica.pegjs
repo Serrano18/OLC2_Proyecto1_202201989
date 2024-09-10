@@ -32,7 +32,7 @@ declaraciones
 
 declaracionvariables 
     =_ tipo:  (tipo / "var"/ id) _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
-            { return  nuevoNodo('DeclaracionVar', { tipo, id, valor }) }
+            { return  nuevoNodo('DeclaracionVar', { tipo, id, exp:valor }) }
 
 
 Stmt 
@@ -103,14 +103,14 @@ agrupacion
         {return  nuevoNodo('Agrupacion', { exp })}
 
 numeros 
-    = entero 
-    /decimal 
+    = decimal 
+    / entero 
 
 entero 
     = [0-9]+    {return  nuevoNodo('Primitivo', { tipo: 'int', valor: parseInt(text()) })}
 
 decimal 
-    = [0-9]+ "." [0-9]+     {return  nuevoNodo('Primitivo', { tipo: 'float', valor: parseFloat(text()) })}
+    = [0-9]+("."[0-9]+)     {return  nuevoNodo('Primitivo', { tipo: 'float', valor: parseFloat(text()) })}
         
 booleano 
     = "true" / "false"  {return  nuevoNodo('Primitivo', { tipo: 'booean', valor: text() === 'true' ? true : false })}
@@ -124,7 +124,7 @@ char
 idvalue
      = id:id    {return  nuevoNodo('ReferenciaVariable', {id})}
 
-id = [a-zA-Z_] [a-zA-Z0-9_]* {return text()}
+id = ([a-zA-Z_])[a-zA-Z0-9_]* {return text()}
 tipo = "int" / "float" / "string" / "char" / "boolean"
 //Comentarios
 _ = ([ \t\n\r] / Comentarios)* 

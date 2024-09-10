@@ -103,7 +103,8 @@ export class InterpreterVisitor extends BaseVisitor{
     */
     visitDeclaracionVariable(node){
       const exp = node.exp.accept(this)
-      const result =  new Primitivo({valor,tipo} = dvariable(exp,node.tipo,node.id)) 
+
+      const result = dvariable(exp,node.tipo,node.id)
       this.entornoActual.setVariable(node.id,result)
     }
  /**

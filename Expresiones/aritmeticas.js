@@ -11,6 +11,7 @@ export function aritmeticas(op,izq,der){
     const reglas = condiciones[op];
     //Verificamos que los tipos sean correctos
     const tipo = reglas.find(([tipoIzq,tipoDer])=>tipoIzq === izq.tipo && tipoDer === der.tipo);
+    console.log(tipo);
     if(!tipo){
         throw new Error('Error en la operacion aritmetica tipos incorrectos');
     }
@@ -28,24 +29,25 @@ export function aritmeticas(op,izq,der){
         '/':(izq,der)=> izq / der,
         '%':(izq,der)=> izq % der,
     }
-    tiporesultante = tipo[2];
-    valorresultante = operaciones[op](izq.valor,der.valor);
+    const tiporesultante = tipo[2];
+    const valorresultante = operaciones[op](izq.valor,der.valor);
     return new Primitivo({valor:valorresultante,tipo:tiporesultante});
    
 }
-const CONDICIONESC = [
-    ['int','int','int'],
-    ['int','float','float'],
-    ['float','int','float'],
-    ['float','float','float'],
-];
-
+function condicionesc()  {
+    return  [
+        ['int','int','int'],
+        ['int','float','float'],
+        ['float','int','float'],
+        ['float','float','float']
+    ];
+}
 //trabajando objetos para + agregar string string = string
 
 const condiciones = {
-    '+':[{CONDICIONESC},['string','string','string']],
-    '-':{CONDICIONESC},
-    '*':{CONDICIONESC},
-    '/':{CONDICIONESC},
-    '%':[['int','int','int']],
+    '+':[...condicionesc(),['string','string','string']],
+    '-':condicionesc(),
+    '*':condicionesc(),
+    '/':condicionesc(),
+    '%':[['int','int','int']]
 }
