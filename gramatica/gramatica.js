@@ -260,44 +260,44 @@ function peg$parse(input, options) {
   var peg$f2 = function(p) {return p};
   var peg$f3 = function(dclv) { return dclv };
   var peg$f4 = function(tipo, id, valor) { return valor};
-  var peg$f5 = function(tipo, id, valor) { return crearNodo('DeclaracionVar', { tipo, id, valor }) };
-  var peg$f6 = function(exp) { return crearNodo('print', { exp }) };
-  var peg$f7 = function(condicion, verdadero, falso) { return crearNodo('OpTernario', { condicion, verdadero, falso }) };
+  var peg$f5 = function(tipo, id, valor) { return new CrearNodo('DeclaracionVar', { tipo, id, valor }) };
+  var peg$f6 = function(exp) { return new CrearNodo('print', { exp }) };
+  var peg$f7 = function(condicion, verdadero, falso) { return new CrearNodo('OpTernario', { condicion, verdadero, falso }) };
   var peg$f8 = function(izq, der) { return { tipo: '||', der } };
   var peg$f9 = function(izq, expansion) { 
         return expansion.reduce(
         (Anterior, Actual) => {
         const { tipo, der } = Actual
-        return crearNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)};
+        return new CrearNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)};
   var peg$f10 = function(izq, der) { return { tipo: '&&', der } };
   var peg$f11 = function(izq, expansion) { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
-        return crearNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)};
+        return new CrearNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)};
   var peg$f12 = function(izq, _op, der) { return { tipo: op, der } };
   var peg$f13 = function(izq, expansion) { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
-        return crearNodo('OpIgualdades', { op:tipo, izq: Anterior, der })},izq)};
+        return new CrearNodo('OpIgualdades', { op:tipo, izq: Anterior, der })},izq)};
   var peg$f14 = function(izq, op, der) { return { tipo: op, der } };
   var peg$f15 = function(izq, expansion) { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
-        return crearNodo('OpRelacional', { op:tipo, izq: Anterior, der })},izq)};
+        return new CrearNodo('OpRelacional', { op:tipo, izq: Anterior, der })},izq)};
   var peg$f16 = function(izq, op, der) { return { tipo: op, der } };
   var peg$f17 = function(izq, expansion) { 
         return expansion.reduce((Anterior,Actual) => {const { tipo, der } = Actual
-        return crearNodo('OpAritmetica', { op:tipo, izq: Anterior, der })},izq)};
+        return new CrearNodo('OpAritmetica', { op:tipo, izq: Anterior, der })},izq)};
   var peg$f18 = function(izq, op, der) { return { tipo: op, der } };
   var peg$f19 = function(izq, expansion) {
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
-        return crearNodo('OpAritmetica', { op:tipo, izq: Anterior, der })},izq)};
-  var peg$f20 = function(num) { return crearNodo('unaria', { op: '-', exp: num }) };
-  var peg$f21 = function(num) { return crearNodo('OpLogica', { op: '!', izq: num, der:-1}) };
-  var peg$f22 = function(exp) {return crearNodo('Agrupacion', { exp })};
-  var peg$f23 = function() {return crearNodo('primitivo', { tipo: 'int', valor: parseInt(text()) })};
-  var peg$f24 = function() {return crearNodo('primitivo', { tipo: 'float', valor: parseFloat(text()) })};
-  var peg$f25 = function() {return crearNodo('primitivo', { tipo: 'booean', valor: text() === 'true' ? true : false })};
-  var peg$f26 = function() {return crearNodo('primitivo', { tipo: 'string', valor: text().slice(1, -1) })};
-  var peg$f27 = function() {return crearNodo('primitivo', { tipo: 'char', valor: text().slice(1, -1) })};
-  var peg$f28 = function(id) {return crearNodo('ReferenciaVariable', {id})};
+        return new CrearNodo('OpAritmetica', { op:tipo, izq: Anterior, der })},izq)};
+  var peg$f20 = function(num) { return new CrearNodo('unaria', { op: '-', exp: num }) };
+  var peg$f21 = function(num) { return new CrearNodo('OpLogica', { op: '!', izq: num, der:-1}) };
+  var peg$f22 = function(exp) {return new CrearNodo('Agrupacion', { exp })};
+  var peg$f23 = function() {return new CrearNodo('primitivo', { tipo: 'int', valor: parseInt(text()) })};
+  var peg$f24 = function() {return new CrearNodo('primitivo', { tipo: 'float', valor: parseFloat(text()) })};
+  var peg$f25 = function() {return new CrearNodo('primitivo', { tipo: 'booean', valor: text() === 'true' ? true : false })};
+  var peg$f26 = function() {return new CrearNodo('primitivo', { tipo: 'string', valor: text().slice(1, -1) })};
+  var peg$f27 = function() {return new CrearNodo('primitivo', { tipo: 'char', valor: text().slice(1, -1) })};
+  var peg$f28 = function(id) {return new CrearNodo('ReferenciaVariable', {id})};
   var peg$f29 = function() {return text()};
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
