@@ -7,7 +7,7 @@
  * @typedef {import('./nodos').Primitivo} Primitivo
 
 
- * @typedef {import('./nodos').OperacioneLogica} OperacioneLogica
+ * @typedef {import('./nodos').OperacionLogica} OperacionLogica
 
 
  * @typedef {import('./nodos').Ternario} Ternario
@@ -71,11 +71,11 @@ export class BaseVisitor {
     
 
     /**
-     * @param {OperacioneLogica} node
+     * @param {OperacionLogica} node
      * @returns {any}
      */
-    visitOperacioneLogica(node) {
-        throw new Error('Metodo visitOperacioneLogica no implementado');
+    visitOperacionLogica(node) {
+        throw new Error('Metodo visitOperacionLogica no implementado');
     }
     
 

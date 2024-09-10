@@ -74,7 +74,7 @@ export class Primitivo extends Expresion {
     }
 }
     
-export class OperacioneLogica extends Expresion {
+export class OperacionLogica extends Expresion {
 
     /**
     * @param {Object} options
@@ -111,7 +111,7 @@ export class OperacioneLogica extends Expresion {
      * @param {BaseVisitor} visitor
      */
     accept(visitor) {
-        return visitor.visitOperacioneLogica(this);
+        return visitor.visitOperacionLogica(this);
     }
 }
     
@@ -478,4 +478,4 @@ export class ExpresionStmt extends Expresion {
     }
 }
     
-export default { Expresion, Primitivo, OperacioneLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
+export default { Expresion, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }

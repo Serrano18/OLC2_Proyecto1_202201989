@@ -48,7 +48,7 @@ const configuracionNodos = [
         ]
     },
     {
-        name: 'OperacioneLogica',
+        name: 'OperacionLogica',
         extends: 'Expresion',
         props: [
             {

@@ -34,7 +34,7 @@ export class InterpreterVisitor extends BaseVisitor{
     /**
       * @type {BaseVisitor['visitOperacioneLogica']}
     */
-    visitOperacioneLogica(node){
+    visitOperacionLogica(node){
         const izq = node.izq.accept(this)
         const der = node.der.accept(this)
 
@@ -111,7 +111,7 @@ export class InterpreterVisitor extends BaseVisitor{
       * @type {BaseVisitor['visitReferenciaVariable']}
       */
     visitReferenciaVariable(node){
-        return this.entornoActual.get(node.id);
+        return this.entornoActual.getVariable(node.id);
     }
    /**
       * @type {BaseVisitor['visitPrint']}

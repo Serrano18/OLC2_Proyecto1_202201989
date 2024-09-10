@@ -50,25 +50,25 @@ ternario
 
 //-------------------------------------------------OPERACIONES LOGICAS ------------------------------------------------
 OR 
-    = izq:AND expansion:( _ "||" _ der:AND { return { tipo: '||', der } })* { 
+    = izq:AND expansion:( _ "||" _ der:AND { return { tipo: "||", der } })* { 
         return expansion.reduce(
         (Anterior, Actual) => {
         const { tipo, der } = Actual
         return  nuevoNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)}
 
 AND 
-    = izq:igualdad expansion:( _ "&&" _ der:igualdad { return { tipo: '&&', der } })* { 
+    = izq:igualdad expansion:( _ "&&" _ der:igualdad { return { tipo: "&&", der } })* { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
         return  nuevoNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)}
 
 igualdad 
-    = izq:relacional expansion:( _op:("==" / "!=") _ der:relacional { return { tipo: op, der } })* { 
+    = izq:relacional expansion:( _ op:("==" / "!=") _ der:relacional { return { tipo: op, der } })* { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
         return  nuevoNodo('OpIgualdades', { op:tipo, izq: Anterior, der })},izq)}
 
 //-------------------------------------------------OPERACIONES RELACIONALES ------------------------------------------------
 relacional 
-    = izq:Suma expansion:( _ op:("<" / ">"/"<=" /">=") _ der:Suma { return { tipo: op, der } })* { 
+    = izq:Suma expansion:( _ op:("<=" /">="/"<" / ">") _ der:Suma { return { tipo: op, der } })* { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
         return  nuevoNodo('OpRelacional', { op:tipo, izq: Anterior, der })},izq)}
 
@@ -94,7 +94,6 @@ datos
     / booleano 
     / char 
     / decimal 
-    / id
     /agrupacion
     /idvalue
 
