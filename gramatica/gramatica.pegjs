@@ -1,4 +1,3 @@
-
 {
   const crearNodo = (tipoNodo, props) =>{
     const tipos = {

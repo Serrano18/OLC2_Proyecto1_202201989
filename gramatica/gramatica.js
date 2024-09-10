@@ -2,7 +2,7 @@
 //
 // https://peggyjs.org/
 
-import nodes from "../Compilador/nodos.js";
+import nodos from "../Compilador/nodos.js";
 
 
 function peg$subclass(child, parent) {
