@@ -1,4 +1,4 @@
-import { Primitivo } from "../nodos.js";
+import { Primitivo } from "../Compilador/nodos.js";
 
 
 export function aritmeticas(op,izq,der){
