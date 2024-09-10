@@ -72,7 +72,7 @@ nav ul {
   }
   .textarea-left,
   .textarea-right {
-    background: url(http://i.imgur.com/2cOaJ.png);
+    background: url(numeros.png);
     flex: 1; /* Ocupar todo el espacio restante */
     width: 609px;
     margin-right: 1rem;
@@ -135,4 +135,34 @@ nav ul {
 .textarea-left, .textarea-right {
     width: 100%;
     height: 90vh;
+}
+
+/* Contenedor de pestañas vertical */
+#tabs-container {
+  display: flex;
+  flex-direction: column; /* Cambia la dirección a columna para que las pestañas estén una debajo de la otra */
+  background-color: #f1f1f1;
+  border-right: 1px solid #ccc;
+  padding: 0;
+  margin: 0;
+  width: 150px; /* Define un ancho fijo para el área de pestañas */
+  overflow-y: auto; /* Permite el desplazamiento vertical si hay muchas pestañas */
+}
+
+/* Estilos para las pestañas */
+#tabs-container .tab {
+  background-color: #e1e1e1;
+  padding: 10px; /* Ajusta el padding para hacer las pestañas más compactas */
+  margin-bottom: 2px; /* Añade margen entre las pestañas */
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-align: center; /* Centra el texto de las pestañas */
+}
+
+#tabs-container .tab.active {
+  background-color: white;
+  font-weight: bold;
+  border-left: 4px solid #333; /* Indicador visual de la pestaña activa */
 }
