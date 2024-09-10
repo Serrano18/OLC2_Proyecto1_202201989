@@ -1,4 +1,4 @@
-class enviroment {
+export class enviroment {
   constructor(padre = null) {
     this.name = "";
     this.prev = padre;

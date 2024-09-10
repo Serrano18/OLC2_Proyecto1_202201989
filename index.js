@@ -1,5 +1,5 @@
 import { parse } from './gramatica/gramatica.js';
-import { InterpreterVisitor } from './Compilador/interpreter.js';
+import { InterpreterVisitor } from './Compilador/interprete.js';
 
 document.getElementById('new-file').addEventListener('click', createNewFile);
 document.getElementById('save-file').addEventListener('click', saveFile);

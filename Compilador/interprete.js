@@ -5,7 +5,6 @@ import { relacionales } from "../Expresiones/relacionales.js";
 import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
-import { Primitivo } from "../Compilador/nodos.js";
 
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
