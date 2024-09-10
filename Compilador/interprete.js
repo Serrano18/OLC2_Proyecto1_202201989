@@ -1,6 +1,11 @@
-import { aritmeticas } from "../Expresiones/aritmeticas";
-import { BaseVisitor } from "../visitor";
-import { Primitivo } from "./nodos";
+import { aritmeticas } from "../Expresiones/aritmeticas.js";
+import { logicas } from "../Expresiones/logicas.js";
+import { igualdades } from "../Expresiones/igualdades.js";
+import { relacionales } from "../Expresiones/relacionales.js";
+import { dvariable } from "../Expresiones/declaracionVariable.js";
+import { enviroment } from "../Expresiones/enviroment.js";
+import { BaseVisitor } from "../visitor.js";
+import { Primitivo } from "./nodos.js";
 
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
