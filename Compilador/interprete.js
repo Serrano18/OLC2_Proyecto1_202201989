@@ -117,6 +117,6 @@ export class InterpreterVisitor extends BaseVisitor{
       */
    visitPrint(node) {
     const valor = node.exp.accept(this);
-    this.salida += valor + '\n';
+    this.salida += valor.valor + '\n';
   }
 }
