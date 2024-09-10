@@ -33,7 +33,7 @@ export class InterpreterVisitor extends BaseVisitor{
         return aritmeticas(node.op,izq,der)
     }
     /**
-      * @type {BaseVisitor['visitOperacioneLogica']}
+      * @type {BaseVisitor['visitOperacionLogica']}
     */
     visitOperacionLogica(node){
         const izq = node.izq.accept(this)

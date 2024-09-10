@@ -90,11 +90,11 @@ Unarias
 // ------------------------------Datos primitivos----------------------------------
 datos 
     = numeros
-     / cadena 
-    / booleano 
-    / char 
-    / decimal 
     /agrupacion
+    / decimal 
+    / booleano 
+     / cadena 
+    / char 
     /idvalue
 
 agrupacion 

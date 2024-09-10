@@ -1243,15 +1243,15 @@ function peg$parse(input, options) {
 
     s0 = peg$parsenumeros();
     if (s0 === peg$FAILED) {
-      s0 = peg$parsecadena();
+      s0 = peg$parseagrupacion();
       if (s0 === peg$FAILED) {
-        s0 = peg$parsebooleano();
+        s0 = peg$parsedecimal();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsechar();
+          s0 = peg$parsebooleano();
           if (s0 === peg$FAILED) {
-            s0 = peg$parsedecimal();
+            s0 = peg$parsecadena();
             if (s0 === peg$FAILED) {
-              s0 = peg$parseagrupacion();
+              s0 = peg$parsechar();
               if (s0 === peg$FAILED) {
                 s0 = peg$parseidvalue();
               }
