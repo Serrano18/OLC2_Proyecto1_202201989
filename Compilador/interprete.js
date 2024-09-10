@@ -2,7 +2,7 @@ import { aritmeticas } from "../Expresiones/aritmeticas.js";
 import { logicas } from "../Expresiones/logicas.js";
 import { igualdades } from "../Expresiones/igualdades.js";
 import { relacionales } from "../Expresiones/relacionales.js";
-import { dvariable } from "../Expresiones/declaracionVariable.js";
+import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Expresiones/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
 import { Primitivo } from "../Compilador/nodos.js";
