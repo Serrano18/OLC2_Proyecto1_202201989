@@ -2,6 +2,8 @@
 //
 // https://peggyjs.org/
 
+import nodes from "../Compilador/nodos.js";
+
 
 function peg$subclass(child, parent) {
   function C() { this.constructor = child; }
