@@ -1,3 +1,5 @@
+import { Primitivo } from "../nodos.js";
+
 export function dvariable (exp,tipo,id){
     if (id == null){
         //error de id no reconocido
