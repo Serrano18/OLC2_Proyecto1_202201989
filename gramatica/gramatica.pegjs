@@ -12,6 +12,15 @@
             'Agrupacion': nodos.Agrupacion,
             'DeclaracionVar': nodos.DeclaracionVariable,
             'ReferenciaVariable': nodos.ReferenciaVariable,
+            'Negacion': nodos.Negacion,
+            'Asignacionvar': nodos.Asignacionvar,
+            'Bloque': nodos.Bloque,
+            'If': nodos.If,
+            'Switch': nodos.Switch,
+            'Case': nodos.Case,
+            'Break': nodos.Break,
+            'Continue': nodos.Continue,
+            'Return': nodos.Return,
         }
 
         const nodo = new tipos[tipo](props)
@@ -20,24 +29,71 @@
     }
 }
 
-programa = _ dcl:instucciones* _ { return dcl }
+programa 
+    = _ dcl:instucciones* _ { return dcl }
 
 instucciones 
     = _ dcl:declaraciones _{ return dcl }
-    /_ p:Stmt _ {return p}
         
 declaraciones 
     = _ dclv:declaracionvariables _ ";" _ { return dclv }
+    / _ asig:asignatura _ ";" _ { return asig }
+    / _ stmt:Stmt _ { return stmt }
              // / declaracionfunciones
 
 declaracionvariables 
     =_ tipo:  (tipo / "var"/ id) _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
             { return  nuevoNodo('DeclaracionVar', { tipo, id, exp:valor }) }
 
-
+// -------------------Sentencias-------------------
 Stmt 
-    = "print"_ "(" _ exp:expresion _ ")" _ ";"  
+    = print 
+    /if
+    /switch
+    /break
+    /conti
+    /ret
+
+print 
+    = "print" _ "(" _ exp:expresion _ ")" _ ";" 
         { return  nuevoNodo('Print', { exp }) }
+
+bloque 
+    = "{" _ ins:instucciones* _ "}" 
+        { return nuevoNodo('Bloque',{ins}) }
+
+if                                                                                      //se vuelve a llamar a ella misma
+    = "if" _ "(" _ cond:expresion _ ")" _ stmtTrue:bloque _ stmtFalse:(_ "else" _ stmtFalse:(bloque/if) { return stmtFalse } )? 
+      { return nuevoNodo('If', { cond, stmtTrue, stmtFalse }) }
+
+switch
+    = "switch" _ "(" _ cond:expresion _ ")" _ "{" _ cases:case* _ def:default? _ "}" 
+        { return nuevoNodo('Switch', { cond, cases, def }) }
+       
+case
+    = _ tipo:("case") _ exp:expresion _ ":" _ stmt:instucciones* _
+        { return nuevoNodo('Case', { tipo, exp, stmt }) }
+default
+    = _ tipo:"default" _ ":" _ stmt:instucciones* _
+        {return nuevoNodo('Case', { tipo, exp: null, stmt })  }
+
+//----------------Transferencia----------------
+break
+    = _ "break" _ ";" 
+        { return nuevoNodo('Break',{}) }
+
+conti 
+    = "continue" _ ";" 
+        { return nuevoNodo('Continue',{}) }
+
+ret
+    = "return" _ exp:expresion? _  ";" 
+        { return nuevoNodo('Return', { exp }) }
+
+asignatura
+    = _ id:id _ op:("+="/"-="/"=") _ valor:expresion _ ";" 
+        { return  nuevoNodo('Asignacionvar', { id,op,valor }) }
+
 //eXPRESION QUE PUEDE SER 
 expresion = asignacion
 
@@ -50,14 +106,14 @@ ternario
 
 //-------------------------------------------------OPERACIONES LOGICAS ------------------------------------------------
 OR 
-    = izq:AND expansion:( _ "||" _ der:AND { return { tipo: "||", der } })* { 
+    = _ izq:AND expansion:( _ "||" _ der:AND { return { tipo: "||", der } })* { 
         return expansion.reduce(
         (Anterior, Actual) => {
         const { tipo, der } = Actual
         return  nuevoNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)}
 
 AND 
-    = izq:igualdad expansion:( _ "&&" _ der:igualdad { return { tipo: "&&", der } })* { 
+    = _ izq:igualdad expansion:( _ "&&" _ der:igualdad { return { tipo: "&&", der } })* { 
         return expansion.reduce((Anterior, Actual) => {const { tipo, der } = Actual
         return  nuevoNodo('OpLogica', { op:tipo, izq: Anterior, der })},izq)}
 
@@ -84,7 +140,7 @@ Multiplicacion = izq:Unarias expansion:(_ op:("*" / "/"/"%") _ der:Unarias { ret
 
 Unarias 
     = "-" _ num:Unarias { return  nuevoNodo('Unaria', { op: '-', exp: num }) }
-    /"!" _ num:Unarias { return  nuevoNodo('OpLogica', { op: '!', izq: num, der:-1}) }
+    /"!" _ num:Unarias { return  nuevoNodo('Negacion', { op: '!', exp: num}) }
     / datos
 
 // ------------------------------Datos primitivos----------------------------------
@@ -112,7 +168,7 @@ decimal
     = [0-9]+("."[0-9]+)     {return  nuevoNodo('Primitivo', { tipo: 'float', valor: parseFloat(text()) })}
         
 booleano 
-    = "true" / "false"  {return  nuevoNodo('Primitivo', { tipo: 'boolean', valor: text() === 'true' ? true : false })}
+    = ("true" / "false")  {return  nuevoNodo('Primitivo', { tipo: 'boolean', valor: text() === "true" ? true : false })}
 
 cadena 
     = "\"" (!"\"" .)* "\""   {return  nuevoNodo('Primitivo', { tipo: 'string', valor: text().slice(1, -1) })}

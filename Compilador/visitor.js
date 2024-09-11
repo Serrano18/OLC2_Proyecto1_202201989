@@ -4,6 +4,15 @@
  * @typedef {import('./nodos').Expresion} Expresion
 
 
+ * @typedef {import('./nodos').Break} Break
+
+
+ * @typedef {import('./nodos').Continue} Continue
+
+
+ * @typedef {import('./nodos').Return} Return
+
+
  * @typedef {import('./nodos').Primitivo} Primitivo
 
 
@@ -23,6 +32,24 @@
 
 
  * @typedef {import('./nodos').OperacionUnaria} OperacionUnaria
+
+
+ * @typedef {import('./nodos').Bloque} Bloque
+
+
+ * @typedef {import('./nodos').If} If
+
+
+ * @typedef {import('./nodos').Case} Case
+
+
+ * @typedef {import('./nodos').Switch} Switch
+
+
+ * @typedef {import('./nodos').Asignacionvar} Asignacionvar
+
+
+ * @typedef {import('./nodos').Negacion} Negacion
 
 
  * @typedef {import('./nodos').Agrupacion} Agrupacion
@@ -58,6 +85,33 @@ export class BaseVisitor {
      */
     visitExpresion(node) {
         throw new Error('Metodo visitExpresion no implementado');
+    }
+    
+
+    /**
+     * @param {Break} node
+     * @returns {any}
+     */
+    visitBreak(node) {
+        throw new Error('Metodo visitBreak no implementado');
+    }
+    
+
+    /**
+     * @param {Continue} node
+     * @returns {any}
+     */
+    visitContinue(node) {
+        throw new Error('Metodo visitContinue no implementado');
+    }
+    
+
+    /**
+     * @param {Return} node
+     * @returns {any}
+     */
+    visitReturn(node) {
+        throw new Error('Metodo visitReturn no implementado');
     }
     
 
@@ -121,6 +175,60 @@ export class BaseVisitor {
      */
     visitOperacionUnaria(node) {
         throw new Error('Metodo visitOperacionUnaria no implementado');
+    }
+    
+
+    /**
+     * @param {Bloque} node
+     * @returns {any}
+     */
+    visitBloque(node) {
+        throw new Error('Metodo visitBloque no implementado');
+    }
+    
+
+    /**
+     * @param {If} node
+     * @returns {any}
+     */
+    visitIf(node) {
+        throw new Error('Metodo visitIf no implementado');
+    }
+    
+
+    /**
+     * @param {Case} node
+     * @returns {any}
+     */
+    visitCase(node) {
+        throw new Error('Metodo visitCase no implementado');
+    }
+    
+
+    /**
+     * @param {Switch} node
+     * @returns {any}
+     */
+    visitSwitch(node) {
+        throw new Error('Metodo visitSwitch no implementado');
+    }
+    
+
+    /**
+     * @param {Asignacionvar} node
+     * @returns {any}
+     */
+    visitAsignacionvar(node) {
+        throw new Error('Metodo visitAsignacionvar no implementado');
+    }
+    
+
+    /**
+     * @param {Negacion} node
+     * @returns {any}
+     */
+    visitNegacion(node) {
+        throw new Error('Metodo visitNegacion no implementado');
     }
     
 

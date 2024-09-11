@@ -6,6 +6,8 @@ import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
 import { Primitivo } from "../Compilador/nodos.js";
+import { asignav } from "../Instruccion/asignacionvar.js";
+import {BreakException,ContinueException,ReturnException} from "../Instruccion/transferencias.js";
 
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
@@ -13,6 +15,7 @@ export class InterpreterVisitor extends BaseVisitor{
     this.entornoActual = new enviroment();
     this.salida = '';
     this.prev = null;
+    this.prevContinue = null;
   }
     interpretar(nodo){
       return nodo.accept(this)
@@ -121,4 +124,160 @@ export class InterpreterVisitor extends BaseVisitor{
     const valor = node.exp.accept(this);
     this.salida += valor.valor + '\n';
   }
+    /**
+      * @type {BaseVisitor['visitNegacion']}
+      */
+  visitNegacion(node){
+    const exp = node.exp.accept(this)
+    if (exp.tipo == 'boolean'){
+        return new Primitivo({valor: !exp.valor , tipo: exp.tipo});
+    }else{
+        throw new Error('Error en la operacion negacion tipos incorrectos');
+    }
+  }
+    /**
+      * @type {BaseVisitor['visitAsignacionvar']}
+      */
+  visitAsignacionvar(node){
+    const valorn = node.valor.accept(this);
+    let valoractual = this.entornoActual.getVariable(node.id)
+    let valorfinal = asignav(valorn,valoractual,node.op)
+    this.entornoActual.assignvariables(node.id,valorfinal)
+  }
+    /**
+      * @type {BaseVisitor['visitBloque']}
+      */
+  visitBloque(node){
+
+    const entornoAnterior = this.entornoActual;
+        this.entornoActual = new enviroment(entornoAnterior);
+
+        node.ins.forEach(ins => ins.accept(this));
+
+        this.entornoActual = entornoAnterior;
+  }
+    /**
+      * @type {BaseVisitor['visitIf']}
+      */
+  visitIf(node){
+    const condicion = node.cond.accept(this)
+    if(condicion.tipo !== 'boolean'){
+      throw new Error('Error en la condicion del if');
+    }
+    if(condicion.valor){
+      return node.stmtTrue.accept(this)
+    }else if(node.stmtFalse != null){
+      return node.stmtFalse.accept(this)
+    }
+    return null
+  }
+   /**
+      * @type {BaseVisitor['visitSwitch']}
+      */
+  visitSwitch(node){
+    let condicion = node.cond.accept(this)
+    if(node.cases === null && node.def === null){
+      throw new Error('No se ha definido ningun caso y default')
+    }
+    let estado = false
+    const entornoAnterior = this.entornoActual;
+    this.entornoActual = new enviroment(entornoAnterior);
+    if(node.cases != null){
+      for(const caso of node.cases){
+        let con = caso.exp.accept(this);
+        if (con.valor == condicion.valor && con.tipo == condicion.tipo && !estado) {
+           try{
+            const inscases = caso.accept(this);
+          }catch(error){
+            
+            this.entornoActual = entornoAnterior;
+            if (error instanceof  BreakException){
+              return
+            }
+            throw error
+          }
+          estado = true;
+        }
+        else if (estado){
+          try{
+            const inscases = caso.accept(this);
+          }catch(error){
+            this.entornoActual = entornoAnterior;
+            if (error instanceof  BreakException){
+              return
+            }
+            throw error
+          }
+        }
+      }
+      if(node.def != null){
+        try{
+           node.def.accept(this);
+        }catch(error){
+          this.entornoActual = entornoAnterior;
+          if (error instanceof  BreakException){
+            return
+          }
+          throw error
+        }
+      }
+    }
+    else if(node.def != null){
+      try{
+         node.def.accept(this);
+      }catch(error){
+        this.entornoActual = entornoAnterior;
+        if (error instanceof  BreakException){
+          return
+        }
+        throw error
+      }
+    }
+  }
+  
+   /**
+      * @type {BaseVisitor['visitCase']}
+      */
+  visitCase(node){
+    try{
+      for(let inst of node.stmt){
+        inst.accept(this);
+      } 
+    }catch(error){
+      if (error instanceof  BreakException){
+        return
+      }
+      throw error
+    }
+  }
+      
+      
+       
+  
+  /**
+     * @type {BaseVisitor['visitBreak']}
+     */
+  visitBreak(node){
+    throw new BreakException();
+  }
+  /**
+     * @type {BaseVisitor['visitContinue']}
+     */
+  visitContinue(node){
+      if (this.prevContinue) {
+        this.prevContinue.accept(this);
+    }
+    throw new ContinueException();
+  }
+  /**
+     * @type {BaseVisitor['visitReturn']}
+     */
+  visitReturn(node){
+    let valor = null;
+    if (node.exp) {
+        valor = node.exp.accept(this);
+    }
+    throw new ReturnException(valor);
+  }
+
 }

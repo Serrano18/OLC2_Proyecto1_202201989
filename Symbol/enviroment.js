@@ -30,7 +30,7 @@ export class enviroment {
         }
 
         if (!valorActual && this.prev) {
-            this.prev.assign(nombre, valor);
+            this.prev.assignvariables(nombre, valor);
             return;
         }
 

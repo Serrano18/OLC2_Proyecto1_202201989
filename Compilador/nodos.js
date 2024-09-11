@@ -41,6 +41,69 @@ export class Expresion  {
     }
 }
     
+export class Break extends Expresion {
+
+    /**
+    * @param {Object} options
+    * 
+    */
+    constructor({  }) {
+        super();
+        
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitBreak(this);
+    }
+}
+    
+export class Continue extends Expresion {
+
+    /**
+    * @param {Object} options
+    * 
+    */
+    constructor({  }) {
+        super();
+        
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitContinue(this);
+    }
+}
+    
+export class Return extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion|undefined} options.exp Expresion a retornar
+    */
+    constructor({ exp }) {
+        super();
+        
+        /**
+         * Expresion a retornar
+         * @type {Expresion|undefined}
+        */
+        this.exp = exp;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitReturn(this);
+    }
+}
+    
 export class Primitivo extends Expresion {
 
     /**
@@ -312,6 +375,228 @@ export class OperacionUnaria extends Expresion {
     }
 }
     
+export class Bloque extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion[]} options.ins Sentencias del bloque
+    */
+    constructor({ ins }) {
+        super();
+        
+        /**
+         * Sentencias del bloque
+         * @type {Expresion[]}
+        */
+        this.ins = ins;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitBloque(this);
+    }
+}
+    
+export class If extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.cond Condicion del if
+ * @param {Expresion} options.stmtTrue Cuerpo del if
+ * @param {Expresion|undefined} options.stmtFalse Cuerpo del else
+    */
+    constructor({ cond, stmtTrue, stmtFalse }) {
+        super();
+        
+        /**
+         * Condicion del if
+         * @type {Expresion}
+        */
+        this.cond = cond;
+
+
+        /**
+         * Cuerpo del if
+         * @type {Expresion}
+        */
+        this.stmtTrue = stmtTrue;
+
+
+        /**
+         * Cuerpo del else
+         * @type {Expresion|undefined}
+        */
+        this.stmtFalse = stmtFalse;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitIf(this);
+    }
+}
+    
+export class Case extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Expresion izquierda de la operacion
+ * @param {Expresion|null} options.exp Expresion a comparar del case
+ * @param {Expresion[]} options.stmt Instrucciones dentro del case
+    */
+    constructor({ tipo, exp, stmt }) {
+        super();
+        
+        /**
+         * Expresion izquierda de la operacion
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Expresion a comparar del case
+         * @type {Expresion|null}
+        */
+        this.exp = exp;
+
+
+        /**
+         * Instrucciones dentro del case
+         * @type {Expresion[]}
+        */
+        this.stmt = stmt;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitCase(this);
+    }
+}
+    
+export class Switch extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.cond Expresion izquierda de la operacion
+ * @param {Case[]} options.cases Expresion derecha de la operacion
+ * @param {Case} options.def Operador de la operacion
+    */
+    constructor({ cond, cases, def }) {
+        super();
+        
+        /**
+         * Expresion izquierda de la operacion
+         * @type {Expresion}
+        */
+        this.cond = cond;
+
+
+        /**
+         * Expresion derecha de la operacion
+         * @type {Case[]}
+        */
+        this.cases = cases;
+
+
+        /**
+         * Operador de la operacion
+         * @type {Case}
+        */
+        this.def = def;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitSwitch(this);
+    }
+}
+    
+export class Asignacionvar extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.valor Expresion izquierda de la operacion
+ * @param {string} options.id Expresion derecha de la operacion
+ * @param {string} options.op Operador de la operacion
+    */
+    constructor({ valor, id, op }) {
+        super();
+        
+        /**
+         * Expresion izquierda de la operacion
+         * @type {Expresion}
+        */
+        this.valor = valor;
+
+
+        /**
+         * Expresion derecha de la operacion
+         * @type {string}
+        */
+        this.id = id;
+
+
+        /**
+         * Operador de la operacion
+         * @type {string}
+        */
+        this.op = op;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitAsignacionvar(this);
+    }
+}
+    
+export class Negacion extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.exp Expresion de la operacion
+ * @param {string} options.op Operador de la operacion
+    */
+    constructor({ exp, op }) {
+        super();
+        
+        /**
+         * Expresion de la operacion
+         * @type {Expresion}
+        */
+        this.exp = exp;
+
+
+        /**
+         * Operador de la operacion
+         * @type {string}
+        */
+        this.op = op;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitNegacion(this);
+    }
+}
+    
 export class Agrupacion extends Expresion {
 
     /**
@@ -478,4 +763,4 @@ export class ExpresionStmt extends Expresion {
     }
 }
     
-export default { Expresion, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
+export default { Expresion, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Bloque, If, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }

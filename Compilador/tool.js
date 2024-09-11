@@ -32,6 +32,27 @@ const configuracionNodos = [
         ]
     },
     {
+        name: 'Break',
+        extends: 'Expresion',
+        props: []
+    },
+    {
+        name: 'Continue',
+        extends: 'Expresion',
+        props: []
+    },
+    {
+        name: 'Return',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'exp',
+                type: 'Expresion|undefined',
+                description: 'Expresion a retornar'
+            }
+        ]
+    },
+    {
         name: 'Primitivo',
         extends: 'Expresion',
         props: [
@@ -154,6 +175,119 @@ const configuracionNodos = [
     },
     {
         name: 'OperacionUnaria',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'exp',
+                type: 'Expresion',
+                description: 'Expresion de la operacion'
+            },
+            {
+                name: 'op',
+                type: 'string',
+                description: 'Operador de la operacion'
+            }
+        ]
+    },
+    { 
+        name: 'Bloque',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'ins',
+                type: 'Expresion[]',
+                description: 'Sentencias del bloque'
+            }
+        ]
+    },
+    {
+        name: 'If',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'cond',
+                type: 'Expresion',
+                description: 'Condicion del if'
+            },
+            {
+                name: 'stmtTrue',
+                type: 'Expresion',
+                description: 'Cuerpo del if'
+            },
+            {
+                name: 'stmtFalse',
+                type: 'Expresion|undefined',
+                description: 'Cuerpo del else'
+            }
+        ]
+    },
+    {
+        name: 'Case',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'tipo',
+                type: 'string',
+                description: 'Expresion izquierda de la operacion'
+            },
+            {
+                name: 'exp',
+                type: 'Expresion|null',
+                description: 'Expresion a comparar del case'
+            },
+            {
+                name: 'stmt',
+                type: 'Expresion[]',
+                description: 'Instrucciones dentro del case'
+            }
+        ]
+    },
+    {
+        name: 'Switch',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'cond',
+                type: 'Expresion',
+                description: 'Expresion izquierda de la operacion'
+            },
+            {
+                name: 'cases',
+                type: 'Case[]',
+                description: 'Expresion derecha de la operacion'
+            },
+            {
+                name: 'def',
+                type: 'Case',
+                description: 'Operador de la operacion'
+            }
+        ]
+    },
+    
+    {
+        name: 'Asignacionvar',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'valor',
+                type: 'Expresion',
+                description: 'Expresion izquierda de la operacion'
+            },
+            {
+                name: 'id',
+                type: 'string',
+                description: 'Expresion derecha de la operacion'
+            },
+            {
+                name: 'op',
+                type: 'string',
+                description: 'Operador de la operacion'
+            }
+        ]
+        
+    },
+    {
+        name: 'Negacion',
         extends: 'Expresion',
         props: [
             {
