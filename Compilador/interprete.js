@@ -250,12 +250,12 @@ export class InterpreterVisitor extends BaseVisitor{
     const incrementoAnterior = this.prevContinue;
     this.prevContinue = node.inc;
         const forTraducido = new nodos.Bloque({
-          dcls: [
+          ins: [
               node.init,
               new nodos.While({
                   cond: node.cond,
                   stmt: new nodos.Bloque({
-                      dcls: [
+                      ins: [
                           node.stmt,
                           node.inc
                       ]
