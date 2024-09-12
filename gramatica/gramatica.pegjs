@@ -84,11 +84,11 @@ default
         {return nuevoNodo('Case', { tipo, exp: null, stmt })  }
 
 for
-    = "for" _ "(" _ init:ForInit _ cond:expresion _ ";" _ inc:expresion _ ")" _ stmt:bloque
+    = "for" _ "(" _ init:ForInit _ cond:expresion _ ";" _ inc:asignatura _ ")" _ stmt:bloque
      {return nuevoNodo('For', { init, cond, inc, stmt })}
 
 ForInit
-    = dcl:declaracionvariables { return dcl }
+    = dcl:declaracionvariables _ ";" { return dcl }
     / exp:expresion _ ";" { return exp }
     / ";" { return null }
 

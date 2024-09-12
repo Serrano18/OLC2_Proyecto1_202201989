@@ -228,7 +228,7 @@ export class InterpreterVisitor extends BaseVisitor{
     const entornoinicial = this.entornoActual;
     
     try {
-      while (node.cond.accept(this)) {
+      while (node.cond.accept(this).valor && node.cond.accept(this).tipo === 'boolean') {
           node.stmt.accept(this);
       }
     } catch (error) {
@@ -246,6 +246,7 @@ export class InterpreterVisitor extends BaseVisitor{
       * @type {BaseVisitor['visitFor']}
       */
   visitFor(node){
+    const entornoinicial = this.entornoActual;
     const incrementoAnterior = this.prevContinue;
     this.prevContinue = node.inc;
         const forTraducido = new nodos.Bloque({
