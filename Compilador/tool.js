@@ -189,6 +189,85 @@ const configuracionNodos = [
             }
         ]
     },
+    {
+        name: 'DeclaFuncion',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'tipo',
+                type: 'string',
+                description: 'Tipo de la funcion'
+            },
+            {
+                name: 'id',
+                type: 'string',
+                description: 'Nombre de la funcion'
+            },
+            {
+                name: 'params',
+                type: 'Object[]',
+                description: 'Parametros de la funcion'
+            },
+            {
+                name: 'bloque',
+                type: 'Expresion[]',
+                description: 'Cuerpo de la función'
+            }
+        ]
+    },
+    {
+        name: 'Llamada',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'callee',
+                type: 'Expresion',
+                description: 'Expresion a llamar'
+            },
+            {
+                name: 'args',
+                type: 'Expresion[]',
+                description: 'Argumentos de la llamada'
+            }
+        ]
+    },
+    {
+        name: 'Get',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'objetivo',
+                type: 'Expresion',
+                description: 'Objeto de la propiedad'
+            },
+            {
+                name: 'propiedad',
+                type: 'string',
+                description: 'Identificador de la propiedad'
+            }
+        ]
+    },
+    {
+        name: 'Set',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'objetivo',
+                type: 'Expresion',
+                description: 'Objeto de la propiedad'
+            },
+            {
+                name: 'propiedad',
+                type: 'string',
+                description: 'Identificador de la propiedad'
+            },
+            {
+                name: 'valor',
+                type: 'Expresion',
+                description: 'Valor de la propiedad'
+            }
+        ]
+    },
     { 
         name: 'Bloque',
         extends: 'Expresion',

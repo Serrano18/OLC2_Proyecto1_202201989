@@ -23,6 +23,9 @@
             'Return': nodos.Return,
             'For': nodos.For,
             'While': nodos.While,
+            'DeclaFuncion' : nodos.DeclaFuncion,
+            'Llamada' : nodos.Llamada,
+            'Get' : nodos.Get,
 
         }
 
@@ -42,7 +45,19 @@ declaraciones
     = _ dclv:declaracionvariables _ ";" _ { return dclv }
     / _ asig:asignatura _ ";" _ { return asig }
     / _ stmt:Stmt _ { return stmt }
+    / dclf:declaracionfunciones _ { return dclf }
              // / declaracionfunciones
+        
+declaracionfunciones 
+    = tipo:(tipo / "void"/ id) _ id:id _ "(" _ params:Parametros? _ ")" _ bloque:bloque 
+        { return nuevoNodo('DeclaFuncion', {tipo, id, params: params || [], bloque }) }
+
+Parametros 
+    = tipo:tipo _ arr:("[]")* _ id:id _ params:("," _ tipos: tipo _ arrs:("[]")*_ ids:id { return {tipos,arrs, ids}})* 
+        { return [{tipo,arr,id}, ...params] }
+
+//Llamadas de funciones
+
 
 declaracionvariables 
     =_ tipo:  (tipo / "var"/ id) _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
@@ -161,7 +176,36 @@ Multiplicacion = izq:Unarias expansion:(_ op:("*" / "/"/"%") _ der:Unarias { ret
 Unarias 
     = "-" _ num:Unarias { return  nuevoNodo('Unaria', { op: '-', exp: num }) }
     /"!" _ num:Unarias { return  nuevoNodo('Negacion', { op: '!', exp: num}) }
+    / llamada
     / datos
+
+llamada 
+    =  objetivoInicial:datos operaciones:(
+    ("(" _ args:Argumentos? _ ")" { return {args, tipo: 'funcCall' } })
+    / ("." _ id:id _ { return { id, tipo: 'Get' } }))* 
+  {
+  const op =  operaciones.reduce(
+    (objetivo, args) => {
+      // return crearNodo('llamada', { callee, args: args || [] })
+      const { tipo, id, args:argumentos } = args
+
+      if (tipo === 'funcCall') {
+        return nuevoNodo('Llamada', { callee: objetivo, args: argumentos || [] })
+      }else if (tipo === 'Get') {
+        return nuevoNodo('Get', { objetivo, propiedad: id })
+      }
+    },
+    objetivoInicial
+  )
+   console.log('Llamada', {op}, {text: text()});
+
+return op
+}
+
+Argumentos 
+    = arg:expresion _ args:("," _ exp:expresion { return exp })* 
+        { return [arg, ...args] }
+
 
 // ------------------------------Datos primitivos----------------------------------
 datos 

@@ -34,6 +34,18 @@
  * @typedef {import('./nodos').OperacionUnaria} OperacionUnaria
 
 
+ * @typedef {import('./nodos').DeclaFuncion} DeclaFuncion
+
+
+ * @typedef {import('./nodos').Llamada} Llamada
+
+
+ * @typedef {import('./nodos').Get} Get
+
+
+ * @typedef {import('./nodos').Set} Set
+
+
  * @typedef {import('./nodos').Bloque} Bloque
 
 
@@ -181,6 +193,42 @@ export class BaseVisitor {
      */
     visitOperacionUnaria(node) {
         throw new Error('Metodo visitOperacionUnaria no implementado');
+    }
+    
+
+    /**
+     * @param {DeclaFuncion} node
+     * @returns {any}
+     */
+    visitDeclaFuncion(node) {
+        throw new Error('Metodo visitDeclaFuncion no implementado');
+    }
+    
+
+    /**
+     * @param {Llamada} node
+     * @returns {any}
+     */
+    visitLlamada(node) {
+        throw new Error('Metodo visitLlamada no implementado');
+    }
+    
+
+    /**
+     * @param {Get} node
+     * @returns {any}
+     */
+    visitGet(node) {
+        throw new Error('Metodo visitGet no implementado');
+    }
+    
+
+    /**
+     * @param {Set} node
+     * @returns {any}
+     */
+    visitSet(node) {
+        throw new Error('Metodo visitSet no implementado');
     }
     
 

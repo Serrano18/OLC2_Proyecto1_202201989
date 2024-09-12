@@ -7,7 +7,10 @@ import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
 import nodos, { Primitivo } from "../Compilador/nodos.js";
 import { asignav } from "../Instruccion/asignacionvar.js";
-
+import { dfuncion } from "../Instruccion/funcion.js";
+import {Instancia} from "../Instruccion/instancia.js"
+import {Clase} from "../Instruccion/clase.js"
+import { Invocable } from "../Instruccion/invocable.js";
 import {BreakException,ContinueException,ReturnException} from "../Instruccion/transferencias.js";
 
 export class InterpreterVisitor extends BaseVisitor{
@@ -269,7 +272,55 @@ export class InterpreterVisitor extends BaseVisitor{
       this.prevContinue = incrementoAnterior;
   }
 
-  
+     /**
+      * @type {BaseVisitor['visitDeclaFuncion']}
+      */
+  visitDeclaFuncion(node) {
+    const newfuncion = new dfuncion(node,this.entornoActual)
+    this.entornoActual.setVariable(node.id,newfuncion)
+  }
+    /**
+      * @type {BaseVisitor['visitLlamada']}
+      */
+  visitLlamada(node){
+    const funcion = node.callee.accept(this);
+    const argumentos = node.args.map(arg => arg.accept(this));
+    if (!(funcion instanceof Invocable)) {
+      throw new Error('No es invocable');
+      // 1() "sdalsk"()
+    }
+    if (funcion.aridad() !== argumentos.length) {
+      throw new Error('Aridad incorrecta');
+    }
+    return funcion.invocar(this, argumentos);
+  }
+ /**
+      * @type {BaseVisitor['visitGet']}
+      */
+  visitGet(node){
+    const instancia = node.objetivo.accept(this);
+    if (!(instancia instanceof Instancia)) {
+      console.log(instancia);
+      throw new Error('No es posible obtener una propiedad de algo que no es una instancia');
+    }
+    return instancia.get(node.propiedad);
+  }
+   /**
+      * @type {BaseVisitor['visitSet']}
+      */
+  visitSet(node) {
+    const instancia = node.objetivo.accept(this);
+
+    if (!(instancia instanceof Instancia)) {
+        throw new Error('No es posible asignar una propiedad de algo que no es una instancia');
+    }
+
+    const valor = node.valor.accept(this);
+
+    instancia.set(node.propiedad, valor);
+
+    return valor;
+  }
       
       
        

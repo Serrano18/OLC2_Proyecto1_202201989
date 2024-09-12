@@ -375,6 +375,162 @@ export class OperacionUnaria extends Expresion {
     }
 }
     
+export class DeclaFuncion extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Tipo de la funcion
+ * @param {string} options.id Nombre de la funcion
+ * @param {Object[]} options.params Parametros de la funcion
+ * @param {Expresion[]} options.bloque Cuerpo de la función
+    */
+    constructor({ tipo, id, params, bloque }) {
+        super();
+        
+        /**
+         * Tipo de la funcion
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Nombre de la funcion
+         * @type {string}
+        */
+        this.id = id;
+
+
+        /**
+         * Parametros de la funcion
+         * @type {Object[]}
+        */
+        this.params = params;
+
+
+        /**
+         * Cuerpo de la función
+         * @type {Expresion[]}
+        */
+        this.bloque = bloque;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitDeclaFuncion(this);
+    }
+}
+    
+export class Llamada extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.callee Expresion a llamar
+ * @param {Expresion[]} options.args Argumentos de la llamada
+    */
+    constructor({ callee, args }) {
+        super();
+        
+        /**
+         * Expresion a llamar
+         * @type {Expresion}
+        */
+        this.callee = callee;
+
+
+        /**
+         * Argumentos de la llamada
+         * @type {Expresion[]}
+        */
+        this.args = args;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitLlamada(this);
+    }
+}
+    
+export class Get extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.objetivo Objeto de la propiedad
+ * @param {string} options.propiedad Identificador de la propiedad
+    */
+    constructor({ objetivo, propiedad }) {
+        super();
+        
+        /**
+         * Objeto de la propiedad
+         * @type {Expresion}
+        */
+        this.objetivo = objetivo;
+
+
+        /**
+         * Identificador de la propiedad
+         * @type {string}
+        */
+        this.propiedad = propiedad;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitGet(this);
+    }
+}
+    
+export class Set extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.objetivo Objeto de la propiedad
+ * @param {string} options.propiedad Identificador de la propiedad
+ * @param {Expresion} options.valor Valor de la propiedad
+    */
+    constructor({ objetivo, propiedad, valor }) {
+        super();
+        
+        /**
+         * Objeto de la propiedad
+         * @type {Expresion}
+        */
+        this.objetivo = objetivo;
+
+
+        /**
+         * Identificador de la propiedad
+         * @type {string}
+        */
+        this.propiedad = propiedad;
+
+
+        /**
+         * Valor de la propiedad
+         * @type {Expresion}
+        */
+        this.valor = valor;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitSet(this);
+    }
+}
+    
 export class Bloque extends Expresion {
 
     /**
@@ -845,4 +1001,4 @@ export class ExpresionStmt extends Expresion {
     }
 }
     
-export default { Expresion, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
+export default { Expresion, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, DeclaFuncion, Llamada, Get, Set, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
