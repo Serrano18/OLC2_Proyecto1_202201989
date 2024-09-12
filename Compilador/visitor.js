@@ -40,6 +40,12 @@
  * @typedef {import('./nodos').If} If
 
 
+ * @typedef {import('./nodos').While} While
+
+
+ * @typedef {import('./nodos').For} For
+
+
  * @typedef {import('./nodos').Case} Case
 
 
@@ -193,6 +199,24 @@ export class BaseVisitor {
      */
     visitIf(node) {
         throw new Error('Metodo visitIf no implementado');
+    }
+    
+
+    /**
+     * @param {While} node
+     * @returns {any}
+     */
+    visitWhile(node) {
+        throw new Error('Metodo visitWhile no implementado');
+    }
+    
+
+    /**
+     * @param {For} node
+     * @returns {any}
+     */
+    visitFor(node) {
+        throw new Error('Metodo visitFor no implementado');
     }
     
 

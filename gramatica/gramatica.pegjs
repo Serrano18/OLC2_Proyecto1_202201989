@@ -21,6 +21,9 @@
             'Break': nodos.Break,
             'Continue': nodos.Continue,
             'Return': nodos.Return,
+            'For': nodos.For,
+            'While': nodos.While,
+
         }
 
         const nodo = new tipos[tipo](props)
@@ -53,6 +56,9 @@ Stmt
     /break
     /conti
     /ret
+    /for
+    /while
+
 
 print 
     = "print" _ "(" _ exp:expresion _ ")" _ ";" 
@@ -77,6 +83,20 @@ default
     = _ tipo:"default" _ ":" _ stmt:instucciones* _
         {return nuevoNodo('Case', { tipo, exp: null, stmt })  }
 
+for
+    = "for" _ "(" _ init:ForInit _ cond:expresion _ ";" _ inc:expresion _ ")" _ stmt:bloque
+     {return nuevoNodo('For', { init, cond, inc, stmt })}
+
+ForInit
+    = dcl:declaracionvariables { return dcl }
+    / exp:expresion _ ";" { return exp }
+    / ";" { return null }
+
+while
+    = "while" _ "(" _ cond:expresion _ ")" _ stmt:bloque 
+        { return nuevoNodo('While', { cond, stmt }) }
+   
+
 //----------------Transferencia----------------
 break
     = _ "break" _ ";" 
@@ -91,7 +111,7 @@ ret
         { return nuevoNodo('Return', { exp }) }
 
 asignatura
-    = _ id:id _ op:("+="/"-="/"=") _ valor:expresion _ ";" 
+    = _ id:id _ op:("+="/"-="/"=") _ valor:expresion _ 
         { return  nuevoNodo('Asignacionvar', { id,op,valor }) }
 
 //eXPRESION QUE PUEDE SER 

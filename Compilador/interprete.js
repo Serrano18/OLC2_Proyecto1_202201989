@@ -5,8 +5,9 @@ import { relacionales } from "../Expresiones/relacionales.js";
 import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
-import { Primitivo } from "../Compilador/nodos.js";
+import nodos, { Primitivo } from "../Compilador/nodos.js";
 import { asignav } from "../Instruccion/asignacionvar.js";
+
 import {BreakException,ContinueException,ReturnException} from "../Instruccion/transferencias.js";
 
 export class InterpreterVisitor extends BaseVisitor{
@@ -182,56 +183,32 @@ export class InterpreterVisitor extends BaseVisitor{
     let estado = false
     const entornoAnterior = this.entornoActual;
     this.entornoActual = new enviroment(entornoAnterior);
-    if(node.cases != null){
-      for(const caso of node.cases){
-        let con = caso.exp.accept(this);
-        if (con.valor == condicion.valor && con.tipo == condicion.tipo && !estado) {
-           try{
-            const inscases = caso.accept(this);
-          }catch(error){
-            
-            this.entornoActual = entornoAnterior;
-            if (error instanceof  BreakException){
-              return
-            }
-            throw error
+    try{
+      if(node.cases != null){
+        for(const caso of node.cases){
+          let con = caso.exp.accept(this);
+          if (con.valor == condicion.valor && con.tipo == condicion.tipo && !estado) {
+              caso.accept(this);
+            estado = true;
           }
-          estado = true;
-        }
-        else if (estado){
-          try{
-            const inscases = caso.accept(this);
-          }catch(error){
-            this.entornoActual = entornoAnterior;
-            if (error instanceof  BreakException){
-              return
-            }
-            throw error
+          else if (estado){
+            caso.accept(this);
           }
         }
-      }
-      if(node.def != null){
-        try{
-           node.def.accept(this);
-        }catch(error){
-          this.entornoActual = entornoAnterior;
-          if (error instanceof  BreakException){
-            return
-          }
-          throw error
+        if(node.def != null){
+            node.def.accept(this);
         }
       }
-    }
-    else if(node.def != null){
-      try{
-         node.def.accept(this);
-      }catch(error){
-        this.entornoActual = entornoAnterior;
-        if (error instanceof  BreakException){
-          return
-        }
-        throw error
+      else if(node.def != null){
+          node.def.accept(this);
       }
+    }catch(error){
+      if (error instanceof  BreakException){
+        return
+      }
+      throw error
+    }finally{
+      this.entornoActual = entornoAnterior;
     }
   }
   
@@ -239,17 +216,59 @@ export class InterpreterVisitor extends BaseVisitor{
       * @type {BaseVisitor['visitCase']}
       */
   visitCase(node){
-    try{
       for(let inst of node.stmt){
         inst.accept(this);
       } 
-    }catch(error){
-      if (error instanceof  BreakException){
-        return
+  }
+     /**
+      * @type {BaseVisitor['visitWhile']}
+      */
+
+  visitWhile(node){
+    const entornoinicial = this.entornoActual;
+    
+    try {
+      while (node.cond.accept(this)) {
+          node.stmt.accept(this);
       }
-      throw error
+    } catch (error) {
+      this.entornoActual = entornoinicial;
+        if (error instanceof BreakException) {
+            return
+        }
+        if (error instanceof ContinueException) {
+            return this.visitWhile(node);
+        }
+        throw error;
     }
   }
+   /**
+      * @type {BaseVisitor['visitFor']}
+      */
+  visitFor(node){
+    const incrementoAnterior = this.prevContinue;
+    this.prevContinue = node.inc;
+        const forTraducido = new nodos.Bloque({
+          dcls: [
+              node.init,
+              new nodos.While({
+                  cond: node.cond,
+                  stmt: new nodos.Bloque({
+                      dcls: [
+                          node.stmt,
+                          node.inc
+                      ]
+                  })
+              })
+          ]
+      })
+
+      forTraducido.accept(this);
+
+      this.prevContinue = incrementoAnterior;
+  }
+
+  
       
       
        

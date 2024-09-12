@@ -211,13 +211,55 @@ const configuracionNodos = [
             },
             {
                 name: 'stmtTrue',
-                type: 'Expresion',
+                type: 'Expresion[]',
                 description: 'Cuerpo del if'
             },
             {
                 name: 'stmtFalse',
-                type: 'Expresion|undefined',
+                type: 'Expresion[]|undefined',
                 description: 'Cuerpo del else'
+            }
+        ]
+    },
+    {
+        name: 'While',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'cond',
+                type: 'Expresion',
+                description: 'Condicion del while'
+            },
+            {
+                name: 'stmt',
+                type: 'Expresion[]',
+                description: 'Cuerpo del while'
+            }
+        ]
+    },
+    {
+        name: 'For',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'init',
+                type: 'Expresion',
+                description: 'Inicializacion del for'
+            },
+            {
+                name: 'cond',
+                type: 'Expresion',
+                description: 'Condicion del for'
+            },
+            {
+                name: 'inc',
+                type: 'Expresion',
+                description: 'Incremento del for'
+            },
+            {
+                name: 'stmt',
+                type: 'Expresion[]',
+                description: 'Cuerpo del for'
             }
         ]
     },

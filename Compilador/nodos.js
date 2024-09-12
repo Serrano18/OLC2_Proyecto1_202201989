@@ -405,8 +405,8 @@ export class If extends Expresion {
     /**
     * @param {Object} options
     * @param {Expresion} options.cond Condicion del if
- * @param {Expresion} options.stmtTrue Cuerpo del if
- * @param {Expresion|undefined} options.stmtFalse Cuerpo del else
+ * @param {Expresion[]} options.stmtTrue Cuerpo del if
+ * @param {Expresion[]|undefined} options.stmtFalse Cuerpo del else
     */
     constructor({ cond, stmtTrue, stmtFalse }) {
         super();
@@ -420,14 +420,14 @@ export class If extends Expresion {
 
         /**
          * Cuerpo del if
-         * @type {Expresion}
+         * @type {Expresion[]}
         */
         this.stmtTrue = stmtTrue;
 
 
         /**
          * Cuerpo del else
-         * @type {Expresion|undefined}
+         * @type {Expresion[]|undefined}
         */
         this.stmtFalse = stmtFalse;
 
@@ -438,6 +438,88 @@ export class If extends Expresion {
      */
     accept(visitor) {
         return visitor.visitIf(this);
+    }
+}
+    
+export class While extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.cond Condicion del while
+ * @param {Expresion[]} options.stmt Cuerpo del while
+    */
+    constructor({ cond, stmt }) {
+        super();
+        
+        /**
+         * Condicion del while
+         * @type {Expresion}
+        */
+        this.cond = cond;
+
+
+        /**
+         * Cuerpo del while
+         * @type {Expresion[]}
+        */
+        this.stmt = stmt;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitWhile(this);
+    }
+}
+    
+export class For extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.init Inicializacion del for
+ * @param {Expresion} options.cond Condicion del for
+ * @param {Expresion} options.inc Incremento del for
+ * @param {Expresion[]} options.stmt Cuerpo del for
+    */
+    constructor({ init, cond, inc, stmt }) {
+        super();
+        
+        /**
+         * Inicializacion del for
+         * @type {Expresion}
+        */
+        this.init = init;
+
+
+        /**
+         * Condicion del for
+         * @type {Expresion}
+        */
+        this.cond = cond;
+
+
+        /**
+         * Incremento del for
+         * @type {Expresion}
+        */
+        this.inc = inc;
+
+
+        /**
+         * Cuerpo del for
+         * @type {Expresion[]}
+        */
+        this.stmt = stmt;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitFor(this);
     }
 }
     
@@ -763,4 +845,4 @@ export class ExpresionStmt extends Expresion {
     }
 }
     
-export default { Expresion, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Bloque, If, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
+export default { Expresion, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
