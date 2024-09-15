@@ -297,6 +297,11 @@ const configuracionNodos = [
                 name: 'valor',
                 type: 'Expresion',
                 description: 'Valor de la propiedad'
+            },
+            {
+                name: 'op',
+                type: 'string',
+                description: 'Operador de la asignacion'
             }
         ]
     },

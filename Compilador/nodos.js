@@ -563,8 +563,9 @@ export class Set extends Expresion {
     * @param {Expresion} options.objetivo Objeto de la propiedad
  * @param {string} options.propiedad Identificador de la propiedad
  * @param {Expresion} options.valor Valor de la propiedad
+ * @param {string} options.op Operador de la asignacion
     */
-    constructor({ objetivo, propiedad, valor }) {
+    constructor({ objetivo, propiedad, valor, op }) {
         super();
         
         /**
@@ -586,6 +587,13 @@ export class Set extends Expresion {
          * @type {Expresion}
         */
         this.valor = valor;
+
+
+        /**
+         * Operador de la asignacion
+         * @type {string}
+        */
+        this.op = op;
 
     }
 

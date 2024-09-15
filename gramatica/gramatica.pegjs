@@ -35,6 +35,7 @@
             'TypeOf' : nodos.TypeOf,
             'DeclaracionStruct' : nodos.DeclaracionStruct,
             'Instancia' : nodos.Instancia,
+            'Set' : nodos.Set
 
 
         }
@@ -90,7 +91,7 @@ declarafunc
 
 declaracionvariables 
     =_ tipo:  (tipo / "var"/ id) _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
-            { return  nuevoNodo('DeclaracionVar', { tipo, id, exp:valor }) }
+            { return  nuevoNodo('DeclaracionVar', { tipo, id, exp:valor || null }) }
 
 // -------------------Sentencias-------------------
 Stmt 
@@ -156,13 +157,21 @@ ret
         { return nuevoNodo('Return', { exp }) }
 
 asignatura
-    = _ id:id _ op:("+="/"-="/"=") _ valor:expresion _ 
-        { return  nuevoNodo('Asignacionvar', { id,op,valor }) }
+    = _ id:llamada _ op:("+="/"-="/"=") _ valor:expresion _ 
+        { 
+            if (id instanceof nodos.ReferenciaVariable){
+             return  nuevoNodo('Asignacionvar', { id:id.id,op,valor }) 
+            } else if (id instanceof nodos.Get){
+                return  nuevoNodo('Set', { objetivo:id.objetivo,propiedad:id.propiedad,valor,op}) 
+            } 
+        }
 
 //eXPRESION QUE PUEDE SER 
 expresion = asignacion
 
-asignacion = ternario
+asignacion 
+    = asignatura
+    /ternario
 
 ternario 
     = _ condicion: OR _ "?" _ verdadero:ternario _ ":" _ falso:ternario _ 

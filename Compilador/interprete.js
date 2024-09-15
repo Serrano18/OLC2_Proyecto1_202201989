@@ -305,11 +305,13 @@ export class InterpreterVisitor extends BaseVisitor{
       */
   visitGet(node){
     const instancia = node.objetivo.accept(this);
-    if (!(instancia instanceof Instancia)) {
-      console.log(instancia);
-      throw new Error('No es posible obtener una propiedad de algo que no es una instancia');
+    if (!(instancia instanceof Primitivo)) {
+      throw new Error('No es posible obtener una propiedad o valor de algo que no es un Primitivo');
     }
-    return instancia.get(node.propiedad);
+    if (!(instancia.valor instanceof Instancia)) {
+  throw new Error('No es posible obtener una propiedad de algo que no es una instancia');
+    }
+    return instancia.valor.getVariable(node.propiedad);
   }
    /**
       * @type {BaseVisitor['visitSet']}
@@ -317,16 +319,16 @@ export class InterpreterVisitor extends BaseVisitor{
   visitSet(node) {
     const instancia = node.objetivo.accept(this);
 
-    if (!(instancia instanceof Instancia)) {
-        throw new Error('No es posible asignar una propiedad de algo que no es una instancia');
+    if (!(instancia instanceof Primitivo)) {
+      throw new Error('No es posible obtener una propiedad o valor de algo que no es un Primitivo');
     }
-
-    const valor = node.valor.accept(this);
-
-    instancia.set(node.propiedad, valor);
-
-    return valor;
-  }
+    if (!(instancia.valor instanceof Instancia)) {
+       throw new Error('No es posible obtener una propiedad de algo que no es una instancia');
+      }
+      valor = asignav(node.valor.accept(this),instancia.valor.getVariable(node.propiedad), node.op)
+      return instancia.valor.setVariable(node.propiedad,valor.valor);
+    }
+  
 
   /**
    * @type {BaseVisitor['visitTypeOf']}
