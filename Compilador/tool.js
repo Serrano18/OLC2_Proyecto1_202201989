@@ -32,6 +32,22 @@ const configuracionNodos = [
         ]
     },
     {
+        name: 'DeclaracionStruct',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'id',
+                type: 'string',
+                description: 'Valor del primitivo'
+            },
+            {
+                name: 'vars',
+                type: 'Expresion[]',
+                description: 'Tipo del primitivo'
+            }
+        ]
+    },
+    {
         name: 'Break',
         extends: 'Expresion',
         props: []
@@ -186,6 +202,22 @@ const configuracionNodos = [
                 name: 'op',
                 type: 'string',
                 description: 'Operador de la operacion'
+            }
+        ]
+    },
+    {
+        name: 'Instancia',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'id',
+                type: 'string',
+                description: 'Tipo de la funcion'
+            },
+            {
+                name: 'args',
+                type: 'Expresion[]',
+                description: 'Nombre de la funcion'
             }
         ]
     },
@@ -503,6 +535,29 @@ const configuracionNodos = [
             }
         ]
     },
+    {
+        name: 'TypeOf',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'exp',
+                type: 'Expresion',
+                description: 'Expresion a evaluar'
+            }
+        ]
+    },
+    {
+        name: 'Sprint',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'args',
+                type: 'Expresion[]',
+                description: 'Expresion a evaluar'
+            }
+        ]
+
+    }
 ]
 
 let code = ''

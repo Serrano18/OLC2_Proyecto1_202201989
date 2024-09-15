@@ -17,6 +17,6 @@ export class ReturnException extends Error {
      */
     constructor(value) {
         super('Return');
-        this.value = value;
+        this.valor = value;
     }
 }

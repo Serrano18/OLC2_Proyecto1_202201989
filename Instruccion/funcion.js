@@ -23,21 +23,20 @@ export class dfuncion extends Invocable {
     */
     invocar(interprete, args) {
         const entornoNuevo = new enviroment(this.clousure);
-
-        this.nodo.params.forEach((param, i) => {
-            entornoNuevo.setVariable(param, args[i]);
-        });
-
         const entornoAntesDeLaLlamada = interprete.entornoActual;
         interprete.entornoActual = entornoNuevo;
 
+        this.nodo.params.forEach((param, i) => {
+           param.exp = args[i];
+              param.accept(interprete);
+        });
         try {
             this.nodo.bloque.accept(interprete);
         } catch (error) {
             interprete.entornoActual = entornoAntesDeLaLlamada;
             if (error instanceof ReturnException) {
-                if (this.nodo.tipo == error.tipo){
-                    return error;
+                if (this.nodo.tipo == error.valor.tipo){ //verificar que el tipo de retorno sea igual al tipo de la funcion
+                    return error.valor;
                 }
             }
             throw error;

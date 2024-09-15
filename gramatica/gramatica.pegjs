@@ -26,6 +26,16 @@
             'DeclaFuncion' : nodos.DeclaFuncion,
             'Llamada' : nodos.Llamada,
             'Get' : nodos.Get,
+            'Sprint' : nodos.Sprint,
+            'ParseInt' : nodos.ParseInt,
+            'ParseFloat' : nodos.ParseFloat,
+            'ToString' : nodos.ToString,
+            'ToLowerCase' : nodos.ToLowerCase,
+            'ToUpperCase' : nodos.ToUpperCase,
+            'TypeOf' : nodos.TypeOf,
+            'DeclaracionStruct' : nodos.DeclaracionStruct,
+            'Instancia' : nodos.Instancia,
+
 
         }
 
@@ -46,18 +56,37 @@ declaraciones
     / _ asig:asignatura _ ";" _ { return asig }
     / _ stmt:Stmt _ { return stmt }
     / dclf:declaracionfunciones _ { return dclf }
+    / _ dcls:declaracionstrucuts _ { return dcls }
              // / declaracionfunciones
         
+
+declaracionstrucuts
+    = "struct" _ id:id _ "{" _ vars:(campos:declaracionvariables _ ";" {return campos})+ _ "}" _ ";" 
+        { return nuevoNodo('DeclaracionStruct', { id, vars }) }
+
+instancia
+    = _ id:id _ "{" _ args:params  _ "}" _
+        { return nuevoNodo('Instancia', { id, args }) }
+
+params = _ p:param _  ps:("," _ pr:param {return pr})*
+        { return [p, ...ps] }
+
+param
+    = _ id:id _ ":" _ valor:expresion _ 
+        { return  nuevoNodo('Asignacionvar', { id,op:"=",valor }) }
+
 declaracionfunciones 
     = tipo:(tipo / "void"/ id) _ id:id _ "(" _ params:Parametros? _ ")" _ bloque:bloque 
         { return nuevoNodo('DeclaFuncion', {tipo, id, params: params || [], bloque }) }
 
 Parametros 
-    = tipo:tipo _ arr:("[]")* _ id:id _ params:("," _ tipos: tipo _ arrs:("[]")*_ ids:id { return {tipos,arrs, ids}})* 
-        { return [{tipo,arr,id}, ...params] }
+    = d:declarafunc _ params:("," _ ds:declarafunc { return ds})* 
+        { return [d, ...params] }
 
 //Llamadas de funciones
 
+declarafunc
+    = declaracionvariables
 
 declaracionvariables 
     =_ tipo:  (tipo / "var"/ id) _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
@@ -66,6 +95,7 @@ declaracionvariables
 // -------------------Sentencias-------------------
 Stmt 
     = print 
+    /sprint
     /if
     /switch
     /break
@@ -176,7 +206,7 @@ Multiplicacion = izq:Unarias expansion:(_ op:("*" / "/"/"%") _ der:Unarias { ret
 Unarias 
     = "-" _ num:Unarias { return  nuevoNodo('Unaria', { op: '-', exp: num }) }
     /"!" _ num:Unarias { return  nuevoNodo('Negacion', { op: '!', exp: num}) }
-    / llamada
+    /llamada
     / datos
 
 llamada 
@@ -199,8 +229,17 @@ llamada
   )
    console.log('Llamada', {op}, {text: text()});
 
-return op
-}
+    return op
+    }
+//Esta no es expresion
+sprint
+    = "System.out.println" _ "(" _ args:Argumentos _ ")" _ ";" 
+        { return  nuevoNodo('Sprint', { args }) }
+//nativas expresiones 
+
+typeof
+    = "typeof" _  exp:expresion  _ 
+        { return  nuevoNodo('TypeOf', { exp }) }
 
 Argumentos 
     = arg:expresion _ args:("," _ exp:expresion { return exp })* 
@@ -213,8 +252,10 @@ datos
     /agrupacion
     / decimal 
     / booleano 
-     / cadena 
+    / cadena 
+    /instancia
     / char 
+    /typeof 
     /idvalue
 
 agrupacion 

@@ -9,14 +9,18 @@ import nodos, { Primitivo } from "../Compilador/nodos.js";
 import { asignav } from "../Instruccion/asignacionvar.js";
 import { dfuncion } from "../Instruccion/funcion.js";
 import {Instancia} from "../Instruccion/instancia.js"
-import {Clase} from "../Instruccion/clase.js"
 import { Invocable } from "../Instruccion/invocable.js";
+import { fnativas } from "../Instruccion/nativas.js";
+import { dstruct } from "../Instruccion/struct.js";
 import {BreakException,ContinueException,ReturnException} from "../Instruccion/transferencias.js";
 
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
     super()
     this.entornoActual = new enviroment();
+     Object.entries(fnativas).forEach(([nombre, funcion]) => {
+      this.entornoActual.setVariable(nombre, funcion);});
+
     this.salida = '';
     this.prev = null;
     this.prevContinue = null;
@@ -110,8 +114,10 @@ export class InterpreterVisitor extends BaseVisitor{
       * @type {BaseVisitor['visitDeclaracionVariable']}
     */
     visitDeclaracionVariable(node){
-      const exp = node.exp.accept(this)
-
+      let exp = null
+      if (node.exp != null){
+         exp = node.exp.accept(this)
+      }
       const result = dvariable(exp,node.tipo,node.id)
       this.entornoActual.setVariable(node.id,result)
     }
@@ -321,8 +327,27 @@ export class InterpreterVisitor extends BaseVisitor{
 
     return valor;
   }
-      
-      
+
+  /**
+   * @type {BaseVisitor['visitTypeOf']}
+   */
+  visitTypeOf(node){
+    let valor = node.exp.accept(this)
+    return new Primitivo({valor: valor.tipo, tipo: 'string'})
+  }
+
+  visitSprint(node){
+    for (const exp of node.args) {
+        const valor = exp.accept(this);
+        this.salida += valor.valor + " ";
+    }
+    this.salida += '\n';
+  }
+
+  visitDeclaracionStruct(node){
+    const newstruct = new dstruct(node,this.entornoActual)
+    this.entornoActual.setVariable(node.id, newstruct);
+  }
        
   
   /**
@@ -349,6 +374,24 @@ export class InterpreterVisitor extends BaseVisitor{
         valor = node.exp.accept(this);
     }
     throw new ReturnException(valor);
+  }
+
+    /**
+     * @type {BaseVisitor['visitDeclaracionStruct']}
+     */
+
+  visitDeclaracionStruct(node){
+    //verificar que sea el entono global pendiente  error
+    const struct = new dstruct(node,this.entornoActual)
+    this.entornoActual.setVariable(node.id, struct);
+  }
+  /**
+     * @type {BaseVisitor['visitInstancia']}
+     */
+  visitInstancia(node){
+   const struct = this.entornoActual.getVariable(node.id);
+
+    return new Primitivo({valor:struct.invocar(this,node.args), tipo: node.id});
   }
 
 }

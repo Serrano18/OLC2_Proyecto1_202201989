@@ -1,7 +1,8 @@
 import { Primitivo } from "../Compilador/nodos.js";
 export function asignav (valorn,valoractual,op){
-    if(valoractual.valor == null || valorn.valor == null){
-        throw new Error('Variable no definida o valor null')
+    if( valorn.valor == null){
+        return new Primitivo({valor:null , tipo: valoractual.tipo});
+        //throw new Error('Variable no definida')
     }
     switch (op){
         case '=':

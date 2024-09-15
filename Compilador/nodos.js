@@ -41,6 +41,39 @@ export class Expresion  {
     }
 }
     
+export class DeclaracionStruct extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.id Valor del primitivo
+ * @param {Expresion[]} options.vars Tipo del primitivo
+    */
+    constructor({ id, vars }) {
+        super();
+        
+        /**
+         * Valor del primitivo
+         * @type {string}
+        */
+        this.id = id;
+
+
+        /**
+         * Tipo del primitivo
+         * @type {Expresion[]}
+        */
+        this.vars = vars;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitDeclaracionStruct(this);
+    }
+}
+    
 export class Break extends Expresion {
 
     /**
@@ -372,6 +405,39 @@ export class OperacionUnaria extends Expresion {
      */
     accept(visitor) {
         return visitor.visitOperacionUnaria(this);
+    }
+}
+    
+export class Instancia extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.id Tipo de la funcion
+ * @param {Expresion[]} options.args Nombre de la funcion
+    */
+    constructor({ id, args }) {
+        super();
+        
+        /**
+         * Tipo de la funcion
+         * @type {string}
+        */
+        this.id = id;
+
+
+        /**
+         * Nombre de la funcion
+         * @type {Expresion[]}
+        */
+        this.args = args;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitInstancia(this);
     }
 }
     
@@ -1001,4 +1067,54 @@ export class ExpresionStmt extends Expresion {
     }
 }
     
-export default { Expresion, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, DeclaFuncion, Llamada, Get, Set, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt }
+export class TypeOf extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.exp Expresion a evaluar
+    */
+    constructor({ exp }) {
+        super();
+        
+        /**
+         * Expresion a evaluar
+         * @type {Expresion}
+        */
+        this.exp = exp;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitTypeOf(this);
+    }
+}
+    
+export class Sprint extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion[]} options.args Expresion a evaluar
+    */
+    constructor({ args }) {
+        super();
+        
+        /**
+         * Expresion a evaluar
+         * @type {Expresion[]}
+        */
+        this.args = args;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitSprint(this);
+    }
+}
+    
+export default { Expresion, DeclaracionStruct, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Instancia, DeclaFuncion, Llamada, Get, Set, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, TypeOf, Sprint }

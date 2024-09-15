@@ -1,30 +1,22 @@
-import { Clase } from "./clase.js";
+import { enviroment } from "../Symbol/enviroment.js";
+import { dstruct } from "./struct.js";
 
 export class Instancia {
 
-    constructor(clase) {
+    constructor(clase,entorno) {
 
         /**
-         * @type {Clase}
+         * @type {dstruct}
          * */
         this.clase = clase;
-        this.propiedades = {};
+        this.propiedades = new enviroment(entorno);
     }
 
-    set(nombre, valor) {
-        this.propiedades[nombre] = valor;
+    setVariable(nombre, valor) {
+        this.propiedades.assignvariables(nombre, valor);
     }
 
-    get(nombre) {
-        if (this.propiedades.hasOwnProperty(nombre)) {
-            return this.propiedades[nombre];
-        }
-
-        const metodo = this.clase.buscarMetodo(nombre);
-        if (metodo) {
-            return metodo.atar(this);
-        }
-
-        throw new Error(`Propiedad no encontrada: ${nombre}`);
+    getVariable(nombre) {
+        return this.propiedades.getVariable(nombre);    
     }
 }

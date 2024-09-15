@@ -4,6 +4,9 @@
  * @typedef {import('./nodos').Expresion} Expresion
 
 
+ * @typedef {import('./nodos').DeclaracionStruct} DeclaracionStruct
+
+
  * @typedef {import('./nodos').Break} Break
 
 
@@ -32,6 +35,9 @@
 
 
  * @typedef {import('./nodos').OperacionUnaria} OperacionUnaria
+
+
+ * @typedef {import('./nodos').Instancia} Instancia
 
 
  * @typedef {import('./nodos').DeclaFuncion} DeclaFuncion
@@ -87,6 +93,12 @@
 
  * @typedef {import('./nodos').ExpresionStmt} ExpresionStmt
 
+
+ * @typedef {import('./nodos').TypeOf} TypeOf
+
+
+ * @typedef {import('./nodos').Sprint} Sprint
+
  */
 
 
@@ -103,6 +115,15 @@ export class BaseVisitor {
      */
     visitExpresion(node) {
         throw new Error('Metodo visitExpresion no implementado');
+    }
+    
+
+    /**
+     * @param {DeclaracionStruct} node
+     * @returns {any}
+     */
+    visitDeclaracionStruct(node) {
+        throw new Error('Metodo visitDeclaracionStruct no implementado');
     }
     
 
@@ -193,6 +214,15 @@ export class BaseVisitor {
      */
     visitOperacionUnaria(node) {
         throw new Error('Metodo visitOperacionUnaria no implementado');
+    }
+    
+
+    /**
+     * @param {Instancia} node
+     * @returns {any}
+     */
+    visitInstancia(node) {
+        throw new Error('Metodo visitInstancia no implementado');
     }
     
 
@@ -355,6 +385,24 @@ export class BaseVisitor {
      */
     visitExpresionStmt(node) {
         throw new Error('Metodo visitExpresionStmt no implementado');
+    }
+    
+
+    /**
+     * @param {TypeOf} node
+     * @returns {any}
+     */
+    visitTypeOf(node) {
+        throw new Error('Metodo visitTypeOf no implementado');
+    }
+    
+
+    /**
+     * @param {Sprint} node
+     * @returns {any}
+     */
+    visitSprint(node) {
+        throw new Error('Metodo visitSprint no implementado');
     }
     
 }
