@@ -34,11 +34,8 @@
             'Array' : nodos.Array,
             'ArrayDefecto' : nodos.ArrayDefecto,
             'Marray' : nodos.Marray,
-            'ExpresionStmt' : nodos.ExpresionStmt
-
-            
-
-
+            'ExpresionStmt' : nodos.ExpresionStmt,
+            'Foreach' : nodos.Foreach
         }
 
         const nodo = new tipos[tipo](props)
@@ -102,6 +99,7 @@ Stmt
     /break
     /conti
     /ret
+    /foreach
     /for
     /while
     / exp:expresion _ ";" { return nuevoNodo('ExpresionStmt', { exp }) }
@@ -138,6 +136,10 @@ ForInit
     = dcl:declaracionvariables _ ";" { return dcl }
     / exp:expresion _ ";" { return exp }
     / ";" { return null }
+
+foreach
+    = "for" _ "(" _ va:declaracionvariables _ ":" _ arr:expresion _ ")" _ bloque:bloque
+        {return nuevoNodo('Foreach', { va, arr, bloque })}
 
 while
     = "while" _ "(" _ cond:expresion _ ")" _ stmt:bloque 
@@ -316,7 +318,15 @@ idvalue
      / id:id    
         {return  nuevoNodo('ReferenciaVariable', {id})}
 
-id = ([a-zA-Z_])[a-zA-Z0-9_]* {return text()}
+reservadas = "int" / "float" / "string" / "char" / "boolean" / "true" / "false" / "void" /
+ "var" / "struct" / "if" / "else" / "switch" / "case" / "default" / "break" / "continue" 
+ / "return" / "for" / "while" / "print" / "System.out.println"  / "new" / "null"  
+
+
+
+identificador = ([a-zA-Z_])[a-zA-Z0-9_]* {return text()}
+id = !reservadas id:identificador {return id}
+
 tipo = "int" / "float" / "string" / "char" / "boolean"
 //Comentarios
 _ = ([ \t\n\r] / Comentarios)* 

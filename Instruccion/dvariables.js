@@ -3,7 +3,7 @@ import { Primitivo } from "../Compilador/nodos.js";
 export function dvariable (exp,tipo,id){
     if (id == null){
         //error de id no reconocido
-        return;
+        throw new Error("Error de id no reconocido");
     }
     //primitivo por defecto
     if (exp == null){

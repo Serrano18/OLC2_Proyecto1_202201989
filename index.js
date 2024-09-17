@@ -126,6 +126,7 @@ function run(){
                 if (sentencias[i] !== undefined) {
                     sentencias[i].accept(interprete);
                 }
+                
                 salida.innerHTML = interprete?.salida || "";
                 //console.log(interprete.salida)
             }catch(error){

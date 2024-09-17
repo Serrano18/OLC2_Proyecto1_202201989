@@ -3,13 +3,13 @@ import { Primitivo } from "../Compilador/nodos.js";
 import { iarray } from "./array.js";
 export class InstanciaA {
 
-    constructor(clase,entorno) {
+    constructor(clase,propiedades) {
 
         /**
          * @type {iarray}
          * */
         this.clase = clase;
-        this.propiedades = [];
+        this.propiedades = propiedades;
     }
     setVariable(indice, valor) {
         if(!(indice instanceof Primitivo)){

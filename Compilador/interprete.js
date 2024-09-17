@@ -5,7 +5,7 @@ import { relacionales } from "../Expresiones/relacionales.js";
 import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
-import nodos, { Llamada, Primitivo, ReferenciaVariable } from "../Compilador/nodos.js";
+import nodos, { DeclaracionVariable, Llamada, Primitivo, ReferenciaVariable } from "../Compilador/nodos.js";
 import { asignav } from "../Instruccion/asignacionvar.js";
 import { dfuncion } from "../Instruccion/funcion.js";
 import {Instancia} from "../Instruccion/instancia.js"
@@ -15,6 +15,7 @@ import { dstruct } from "../Instruccion/struct.js";
 import {BreakException,ContinueException,ReturnException} from "../Instruccion/transferencias.js";
 import { iarray } from "../Instruccion/array.js";
 import { InstanciaA } from "../Instruccion/InstanciaA.js";
+import { ClonarA } from "../Instruccion/clonarA.js";
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
     super()
@@ -115,9 +116,12 @@ export class InterpreterVisitor extends BaseVisitor{
       * @type {BaseVisitor['visitDeclaracionVariable']}
     */
     visitDeclaracionVariable(node){
-      let exp = null
-      if (node.exp != null){
-         exp = node.exp.accept(this)
+      let exp = node.exp  ? node.exp.accept(this) : null
+      
+      if (exp!= null){
+        if(exp.valor instanceof InstanciaA){
+         exp = ClonarA(exp)
+        }
       }
       const result = dvariable(exp,node.tipo,node.id)
       this.entornoActual.setVariable(node.id,result)
@@ -149,8 +153,14 @@ export class InterpreterVisitor extends BaseVisitor{
     /**
       * @type {BaseVisitor['visitAsignacionvar']}
       */
-  visitAsignacionvar(node){
+  visitAsignacionvar(node){ 
     const valorn = node.valor.accept(this);
+    
+      if (valorn!= null){
+        if(valorn.valor instanceof InstanciaA){
+         valorn = ClonarA(exp)
+        }
+      }
     let valoractual = this.entornoActual.getVariable(node.id)
     let valorfinal = asignav(valorn,valoractual,node.op)
     this.entornoActual.assignvariables(node.id,valorfinal)
@@ -285,6 +295,42 @@ export class InterpreterVisitor extends BaseVisitor{
 
       this.prevContinue = incrementoAnterior;
   }
+   /**
+      * @type {BaseVisitor['visitForeach']}
+      */
+  visitForeach(node){
+    let array;
+    if (!node.va instanceof DeclaracionVariable){
+      throw new Error('Error en la variable del foreach');
+    }
+      array = node.arr.accept(this);
+    
+    if(!array.valor instanceof Primitivo){
+      throw new Error('Error en el array del foreach');
+    }  
+
+    if (array.valor instanceof InstanciaA) {
+      array = array.valor.propiedades;
+    }
+    const entornoinicial = this.entornoActual;
+    try {
+      for (let i = 0; i < array.length; i++) {
+        node.va.exp = array[i];
+        node.bloque.ins.unshift(node.va);
+        node.bloque.accept(this);
+        node.bloque.ins.splice(0, 1);
+      }
+    } catch (error) {
+      this.entornoActual = entornoinicial;
+      if (error instanceof BreakException) {
+          return
+      }
+      if (error instanceof ContinueException) {
+          return this.visitForeach(node);
+      }
+      throw error;
+    }
+}
 
      /**
       * @type {BaseVisitor['visitDeclaFuncion']}
@@ -356,7 +402,13 @@ export class InterpreterVisitor extends BaseVisitor{
 
   visitSprint(node){
     for (const exp of node.args) {
-        const valor = exp.accept(this);
+        let valor = exp.accept(this);
+        if (valor.tipo === 'string') {
+          valor.valor = valor.valor.replace('\\n', '\n')
+          valor.valor = valor.valor.replace('\\r', '\r')
+          valor.valor = valor.valor.replace('\\"', '\"')
+          valor.valor = valor.valor.replace('\\t', '\t')
+        }
         this.salida += valor.valor + " ";
     }
     this.salida += '\n';

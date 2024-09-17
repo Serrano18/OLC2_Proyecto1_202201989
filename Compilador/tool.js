@@ -563,7 +563,27 @@ const configuracionNodos = [
             }
         ]
     },
-   
+   {
+    name: 'Foreach',
+    extends: 'Expresion',
+    props: [
+        {
+            name: 'va',
+            type: 'Expresion',
+            description: 'Declaracion de la variable'
+        },
+        {
+            name: 'arr',
+            type: 'Expresion',
+            description: 'Arreglo a recorrer'
+        },
+        {
+            name: 'bloque',
+            type: 'Expresion[]',
+            description: 'Tipo de la variable'
+        }
+    ]
+   },
     {
         name: 'TypeOf',
         extends: 'Expresion',

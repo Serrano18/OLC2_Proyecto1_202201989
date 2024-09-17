@@ -97,6 +97,9 @@
  * @typedef {import('./nodos').Print} Print
 
 
+ * @typedef {import('./nodos').Foreach} Foreach
+
+
  * @typedef {import('./nodos').TypeOf} TypeOf
 
 
@@ -397,6 +400,15 @@ export class BaseVisitor {
      */
     visitPrint(node) {
         throw new Error('Metodo visitPrint no implementado');
+    }
+    
+
+    /**
+     * @param {Foreach} node
+     * @returns {any}
+     */
+    visitForeach(node) {
+        throw new Error('Metodo visitForeach no implementado');
     }
     
 
