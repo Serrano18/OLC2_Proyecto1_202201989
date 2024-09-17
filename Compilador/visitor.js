@@ -58,6 +58,9 @@
  * @typedef {import('./nodos').Bloque} Bloque
 
 
+ * @typedef {import('./nodos').ExpresionStmt} ExpresionStmt
+
+
  * @typedef {import('./nodos').If} If
 
 
@@ -92,9 +95,6 @@
 
 
  * @typedef {import('./nodos').Print} Print
-
-
- * @typedef {import('./nodos').ExpresionStmt} ExpresionStmt
 
 
  * @typedef {import('./nodos').TypeOf} TypeOf
@@ -284,6 +284,15 @@ export class BaseVisitor {
     
 
     /**
+     * @param {ExpresionStmt} node
+     * @returns {any}
+     */
+    visitExpresionStmt(node) {
+        throw new Error('Metodo visitExpresionStmt no implementado');
+    }
+    
+
+    /**
      * @param {If} node
      * @returns {any}
      */
@@ -388,15 +397,6 @@ export class BaseVisitor {
      */
     visitPrint(node) {
         throw new Error('Metodo visitPrint no implementado');
-    }
-    
-
-    /**
-     * @param {ExpresionStmt} node
-     * @returns {any}
-     */
-    visitExpresionStmt(node) {
-        throw new Error('Metodo visitExpresionStmt no implementado');
     }
     
 

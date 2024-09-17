@@ -2,7 +2,7 @@ import { Invocable } from "./invocable.js";
 import { Primitivo } from "../Compilador/nodos.js";
 import { iarray } from "./array.js";
 import { InstanciaA } from "./InstanciaA.js";
-
+import { Instancia } from "./instancia.js";
 class Nativa extends Invocable {
     constructor(aridad, func) {
         super();

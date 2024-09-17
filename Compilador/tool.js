@@ -341,6 +341,17 @@ const configuracionNodos = [
         ]
     },
     {
+        name: 'ExpresionStmt',
+        extends: 'Expresion',
+        props: [
+            {
+                name: 'exp',
+                type: 'Expresion',
+                description: 'Expresion a evaluar'
+            }
+        ]
+    },
+    {
         name: 'If',
         extends: 'Expresion',
         props: [
@@ -552,18 +563,7 @@ const configuracionNodos = [
             }
         ]
     },
-    // ExpresionStmt 1+2;
-    {
-        name: 'ExpresionStmt',
-        extends: 'Expresion',
-        props: [
-            {
-                name: 'exp',
-                type: 'Expresion',
-                description: 'Expresion a evaluar'
-            }
-        ]
-    },
+   
     {
         name: 'TypeOf',
         extends: 'Expresion',

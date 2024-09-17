@@ -5,10 +5,41 @@ document.getElementById('new-file').addEventListener('click', createNewFile);
 document.getElementById('save-file').addEventListener('click', saveFile);
 document.getElementById('open-file').addEventListener('click', () => document.getElementById('file-input').click());
 document.getElementById('file-input').addEventListener('change', openFile);
+document.getElementById('Rerrores').addEventListener('click', createRerrores);
+document.getElementById('Rsimbolos').addEventListener('click', createRsimbolos);
+
 document.getElementById('run').addEventListener('click', run);
 const salida = document.getElementById('consoleOutput');
 let tabs = [];
 let activeTab = null;
+let errores = [];
+let tablaSimbolos = [];
+
+export function agregarError(descripcion, tipo, linea, columna) {
+    errores.push({
+        no: errores.length + 1,
+        descripcion,
+        tipo,
+        linea,
+        columna
+    });
+}
+export function agregarSimbolo(id, tipoSimbolo, tipoDato, linea, columna) {
+    tablaSimbolos.push({
+        no: tablaSimbolos.length + 1,
+        id,
+        tipoSimbolo,
+        tipoDato,
+        linea,
+        columna
+    });
+}
+function createRerrores(){
+}
+function createRsimbolos(){
+}
+
+
 
 // Crear un nuevo archivo en blanco
 function createNewFile() {

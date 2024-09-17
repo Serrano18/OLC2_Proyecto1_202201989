@@ -671,6 +671,31 @@ export class Bloque extends Expresion {
     }
 }
     
+export class ExpresionStmt extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {Expresion} options.exp Expresion a evaluar
+    */
+    constructor({ exp }) {
+        super();
+        
+        /**
+         * Expresion a evaluar
+         * @type {Expresion}
+        */
+        this.exp = exp;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitExpresionStmt(this);
+    }
+}
+    
 export class If extends Expresion {
 
     /**
@@ -1091,31 +1116,6 @@ export class Print extends Expresion {
     }
 }
     
-export class ExpresionStmt extends Expresion {
-
-    /**
-    * @param {Object} options
-    * @param {Expresion} options.exp Expresion a evaluar
-    */
-    constructor({ exp }) {
-        super();
-        
-        /**
-         * Expresion a evaluar
-         * @type {Expresion}
-        */
-        this.exp = exp;
-
-    }
-
-    /**
-     * @param {BaseVisitor} visitor
-     */
-    accept(visitor) {
-        return visitor.visitExpresionStmt(this);
-    }
-}
-    
 export class TypeOf extends Expresion {
 
     /**
@@ -1166,4 +1166,4 @@ export class Sprint extends Expresion {
     }
 }
     
-export default { Expresion, DeclaracionStruct, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Instancia, DeclaFuncion, Llamada, Get, Set, Array, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, TypeOf, Sprint }
+export default { Expresion, DeclaracionStruct, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Instancia, DeclaFuncion, Llamada, Get, Set, Array, Bloque, ExpresionStmt, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, TypeOf, Sprint }

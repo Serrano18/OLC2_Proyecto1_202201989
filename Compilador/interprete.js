@@ -5,7 +5,7 @@ import { relacionales } from "../Expresiones/relacionales.js";
 import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
-import nodos, { Llamada, Primitivo } from "../Compilador/nodos.js";
+import nodos, { Llamada, Primitivo, ReferenciaVariable } from "../Compilador/nodos.js";
 import { asignav } from "../Instruccion/asignacionvar.js";
 import { dfuncion } from "../Instruccion/funcion.js";
 import {Instancia} from "../Instruccion/instancia.js"
@@ -222,6 +222,13 @@ export class InterpreterVisitor extends BaseVisitor{
     }
   }
   
+    /**
+      * @type {BaseVisitor['visitExpresionStmt']}
+      */
+    visitExpresionStmt(node) {
+      node.exp.accept(this);
+  }
+  
    /**
       * @type {BaseVisitor['visitCase']}
       */
@@ -315,6 +322,9 @@ export class InterpreterVisitor extends BaseVisitor{
     if (node.propiedad instanceof Llamada) {
       node.propiedad.args.unshift(instancia)
       return node.propiedad.accept(this)
+    }
+    if (node.propiedad instanceof ReferenciaVariable){
+      return instancia.valor.getVariable(node.propiedad.accept(this));
     }
     return instancia.valor.getVariable(node.propiedad);
   }

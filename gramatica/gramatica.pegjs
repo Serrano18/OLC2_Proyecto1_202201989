@@ -34,7 +34,7 @@
             'Array' : nodos.Array,
             'ArrayDefecto' : nodos.ArrayDefecto,
             'Marray' : nodos.Marray,
-
+            'ExpresionStmt' : nodos.ExpresionStmt
 
             
 
@@ -54,16 +54,15 @@ instucciones
     = _ dcl:declaraciones _{ return dcl }
         
 declaraciones 
-    = _ dclv:declaracionvariables _ ";" _ { return dclv }
-    / _ asig:asignatura _ ";" _ { return asig }
-    / _ stmt:Stmt _ { return stmt }
+
+    =  dcls:declaracionstrucuts _ { return dcls }
     / dclf:declaracionfunciones _ { return dclf }
-    / _ dcls:declaracionstrucuts _ { return dcls }
-             // / declaracionfunciones
+     / dclv:declaracionvariables _ ";" _ { return dclv }
+    /  stmt:Stmt _ { return stmt }
         
 
 declaracionstrucuts
-    = "struct" _ id:id _ "{" _ vars:(campos:declaracionvariables _ ";" _ {return campos})+  "}" _ ";" 
+    = "struct" _ id:id _ "{" _ vars:(campos:declaracionvariables _ ";" _ {return campos})+  _"}" _ ";" 
         { return nuevoNodo('DeclaracionStruct', { id, vars }) }
 
 instancia
@@ -105,6 +104,7 @@ Stmt
     /ret
     /for
     /while
+    / exp:expresion _ ";" { return nuevoNodo('ExpresionStmt', { exp }) }
 
 
 print 
@@ -226,7 +226,7 @@ Marray
 llamada 
     =  objetivoInicial:datos operaciones:(
     ("(" _ args:Argumentos? _ ")" { return {args, tipo: 'funcCall' } })
-    / ("." _ id:("length"/Marray/llamada/id) _ { return { id, tipo: 'Get' } }) 
+    / ("." _ id:("length"/Marray/id/llamada) _ { return { id, tipo: 'Get' } }) 
     / ("[" _ id:expresion _ "]" { return { id, tipo: 'Inarray' } })
     )* 
   {
@@ -311,7 +311,9 @@ char
     = "'" (!"'" .) "'"     {return  nuevoNodo('Primitivo', { tipo: 'char', valor: text().slice(1, -1) })}
 
 idvalue
-     =  id:id    
+     = id: "Object.keys"
+        { return nuevoNodo('ReferenciaVariable', {id})} 
+     / id:id    
         {return  nuevoNodo('ReferenciaVariable', {id})}
 
 id = ([a-zA-Z_])[a-zA-Z0-9_]* {return text()}
