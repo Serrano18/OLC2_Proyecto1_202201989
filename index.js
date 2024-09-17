@@ -127,7 +127,7 @@ function run(){
                     sentencias[i].accept(interprete);
                 }
                 salida.innerHTML = interprete?.salida || "";
-                console.log(interprete.salida)
+                //console.log(interprete.salida)
             }catch(error){
                 console.log(error)
             }

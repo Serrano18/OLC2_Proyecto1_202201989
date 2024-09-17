@@ -11,7 +11,7 @@ export function aritmeticas(op,izq,der){
     const reglas = condiciones[op];
     //Verificamos que los tipos sean correctos
     const tipo = reglas.find(([tipoIzq,tipoDer])=>tipoIzq === izq.tipo && tipoDer === der.tipo);
-    console.log(tipo);
+
     if(!tipo){
         throw new Error('Error en la operacion aritmetica tipos incorrectos');
     }
@@ -32,7 +32,7 @@ export function aritmeticas(op,izq,der){
     let tiporesultante = tipo[2];
     let valorresultante = operaciones[op](izq.valor,der.valor);
     if (tiporesultante === 'int' && valorresultante !== null){
-        valorresultante = (valorresultante);
+        valorresultante = parseInt(valorresultante);
     }
     return new Primitivo({valor:valorresultante,tipo:tiporesultante});
    
