@@ -305,6 +305,30 @@ const configuracionNodos = [
             }
         ]
     },
+    {
+        
+            name: 'Array',
+            extends: 'Expresion',
+            props: [
+                {
+                    name: 'tipo',
+                    type: 'string',
+                    description: 'tipo de array'
+                },
+                {
+                    name: 't',
+                    type: 'Expresion[]',
+                    description: 'Tamaño del array'
+                },
+                {
+                    name: 'args',
+                    type: 'Expresion[]',
+                    description: 'Expresion a evaluar'
+                }
+            ]
+    
+        
+    },
     { 
         name: 'Bloque',
         extends: 'Expresion',

@@ -52,6 +52,9 @@
  * @typedef {import('./nodos').Set} Set
 
 
+ * @typedef {import('./nodos').Array} Array
+
+
  * @typedef {import('./nodos').Bloque} Bloque
 
 
@@ -259,6 +262,15 @@ export class BaseVisitor {
      */
     visitSet(node) {
         throw new Error('Metodo visitSet no implementado');
+    }
+    
+
+    /**
+     * @param {Array} node
+     * @returns {any}
+     */
+    visitArray(node) {
+        throw new Error('Metodo visitArray no implementado');
     }
     
 

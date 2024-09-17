@@ -605,6 +605,47 @@ export class Set extends Expresion {
     }
 }
     
+export class Array extends Expresion {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo tipo de array
+ * @param {Expresion[]} options.t Tamaño del array
+ * @param {Expresion[]} options.args Expresion a evaluar
+    */
+    constructor({ tipo, t, args }) {
+        super();
+        
+        /**
+         * tipo de array
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Tamaño del array
+         * @type {Expresion[]}
+        */
+        this.t = t;
+
+
+        /**
+         * Expresion a evaluar
+         * @type {Expresion[]}
+        */
+        this.args = args;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitArray(this);
+    }
+}
+    
 export class Bloque extends Expresion {
 
     /**
@@ -1125,4 +1166,4 @@ export class Sprint extends Expresion {
     }
 }
     
-export default { Expresion, DeclaracionStruct, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Instancia, DeclaFuncion, Llamada, Get, Set, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, TypeOf, Sprint }
+export default { Expresion, DeclaracionStruct, Break, Continue, Return, Primitivo, OperacionLogica, Ternario, OperacionAritmetica, OperacionRelacional, OperacionIgualdades, OperacionUnaria, Instancia, DeclaFuncion, Llamada, Get, Set, Array, Bloque, If, While, For, Case, Switch, Asignacionvar, Negacion, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, TypeOf, Sprint }

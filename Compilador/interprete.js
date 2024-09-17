@@ -5,7 +5,7 @@ import { relacionales } from "../Expresiones/relacionales.js";
 import { dvariable } from "../Instruccion/dvariables.js";
 import { enviroment } from "../Symbol/enviroment.js";
 import { BaseVisitor } from "../Compilador/visitor.js";
-import nodos, { Primitivo } from "../Compilador/nodos.js";
+import nodos, { Llamada, Primitivo } from "../Compilador/nodos.js";
 import { asignav } from "../Instruccion/asignacionvar.js";
 import { dfuncion } from "../Instruccion/funcion.js";
 import {Instancia} from "../Instruccion/instancia.js"
@@ -13,7 +13,8 @@ import { Invocable } from "../Instruccion/invocable.js";
 import { fnativas } from "../Instruccion/nativas.js";
 import { dstruct } from "../Instruccion/struct.js";
 import {BreakException,ContinueException,ReturnException} from "../Instruccion/transferencias.js";
-
+import { iarray } from "../Instruccion/array.js";
+import { InstanciaA } from "../Instruccion/InstanciaA.js";
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
     super()
@@ -308,11 +309,16 @@ export class InterpreterVisitor extends BaseVisitor{
     if (!(instancia instanceof Primitivo)) {
       throw new Error('No es posible obtener una propiedad o valor de algo que no es un Primitivo');
     }
-    if (!(instancia.valor instanceof Instancia)) {
+    if (!(instancia.valor instanceof Instancia) && !(instancia.valor instanceof InstanciaA)) {
   throw new Error('No es posible obtener una propiedad de algo que no es una instancia');
+    }
+    if (node.propiedad instanceof Llamada) {
+      node.propiedad.args.unshift(instancia)
+      return node.propiedad.accept(this)
     }
     return instancia.valor.getVariable(node.propiedad);
   }
+
    /**
       * @type {BaseVisitor['visitSet']}
       */
@@ -322,12 +328,12 @@ export class InterpreterVisitor extends BaseVisitor{
     if (!(instancia instanceof Primitivo)) {
       throw new Error('No es posible obtener una propiedad o valor de algo que no es un Primitivo');
     }
-    if (!(instancia.valor instanceof Instancia)) {
+    if (!(instancia.valor instanceof Instancia) && !(instancia.valor instanceof InstanciaA)) {
        throw new Error('No es posible obtener una propiedad de algo que no es una instancia');
       }
-      valor = asignav(node.valor.accept(this),instancia.valor.getVariable(node.propiedad), node.op)
-      return instancia.valor.setVariable(node.propiedad,valor.valor);
-    }
+      let valor = asignav(node.valor.accept(this),instancia.valor.getVariable(node.propiedad), node.op)
+      return instancia.valor.setVariable(node.propiedad, valor);
+  }
   
 
   /**
@@ -395,5 +401,13 @@ export class InterpreterVisitor extends BaseVisitor{
 
     return new Primitivo({valor:struct.invocar(this,node.args), tipo: node.id});
   }
+  visitArray(node){
+    const array = new iarray(node,[])
+    const valor = array.invocar(this,node.args)
+    return new Primitivo({valor:valor, tipo: array.nodo.tipo});
+      
+  }
+
 
 }
+

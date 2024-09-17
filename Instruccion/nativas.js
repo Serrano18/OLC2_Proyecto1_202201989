@@ -1,5 +1,7 @@
 import { Invocable } from "./invocable.js";
 import { Primitivo } from "../Compilador/nodos.js";
+import { iarray } from "./array.js";
+import { InstanciaA } from "./InstanciaA.js";
 
 class Nativa extends Invocable {
     constructor(aridad, func) {
@@ -47,5 +49,28 @@ export const fnativas = {
         }
         return new Primitivo({valor: args[0].valor.toUpperCase(), tipo: 'string'})
     }),
+    'join': new Nativa(() => 2, (interprete,args) => {
+        if (!(args[0] instanceof Primitivo)){
+            throw new Error('Error el dato no es primitivo')
+        }
+        if (!(args[0].value instanceof InstanciaA)){
+            throw new Error('Error el argumento no es un Array o Matriz')
+        }
+        return new Primitivo({
+            valor: args[0].valor.propiedades.map((x) => x.valor).join(','),
+            tipo: 'string'})
+    }),
+    'indexOf': new Nativa(() => 2, (interprete,args) => {
+        if (!(args[0] instanceof Primitivo)){
+            throw new Error('Error el dato no es primitivo')
+        }
+        if (!(args[0].value instanceof InstanciaA)){
+            throw new Error('Error el argumento no es un Array o Matriz')
+        }
+        return new Primitivo({
+            valor:args[0].valor.propiedades.findIndex(x => x.value == args[1].valor && x.tipo == tipo),
+            tipo: 'int'})
+    })
+
     
 }

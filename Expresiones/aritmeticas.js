@@ -32,7 +32,7 @@ export function aritmeticas(op,izq,der){
     let tiporesultante = tipo[2];
     let valorresultante = operaciones[op](izq.valor,der.valor);
     if (tiporesultante === 'int' && valorresultante !== null){
-        valorresultante = parseInt(valorresultante);
+        valorresultante = (valorresultante);
     }
     return new Primitivo({valor:valorresultante,tipo:tiporesultante});
    

@@ -27,15 +27,16 @@
             'Llamada' : nodos.Llamada,
             'Get' : nodos.Get,
             'Sprint' : nodos.Sprint,
-            'ParseInt' : nodos.ParseInt,
-            'ParseFloat' : nodos.ParseFloat,
-            'ToString' : nodos.ToString,
-            'ToLowerCase' : nodos.ToLowerCase,
-            'ToUpperCase' : nodos.ToUpperCase,
             'TypeOf' : nodos.TypeOf,
             'DeclaracionStruct' : nodos.DeclaracionStruct,
             'Instancia' : nodos.Instancia,
-            'Set' : nodos.Set
+            'Set' : nodos.Set,
+            'Array' : nodos.Array,
+            'ArrayDefecto' : nodos.ArrayDefecto,
+            'Marray' : nodos.Marray,
+
+
+            
 
 
         }
@@ -89,9 +90,9 @@ Parametros
 declarafunc
     = declaracionvariables
 
-declaracionvariables 
-    =_ tipo:  (tipo / "var"/ id) _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
-            { return  nuevoNodo('DeclaracionVar', { tipo, id, exp:valor || null }) }
+declaracionvariables  //declara variables y arrays
+    = tipo:  (tipo / "var"/ id) _ t:("[" _ "]"_ {return 0})* _ id:id _ valor:( "=" _ valor:expresion { return valor}) ? 
+            { return  nuevoNodo('DeclaracionVar', { tipo:(tipo + '[]'.repeat(t.length)), id, exp:valor || null }) }
 
 // -------------------Sentencias-------------------
 Stmt 
@@ -123,10 +124,10 @@ switch
         { return nuevoNodo('Switch', { cond, cases, def }) }
        
 case
-    = _ tipo:("case") _ exp:expresion _ ":" _ stmt:instucciones* _
+    =  tipo:("case") _ exp:expresion _ ":" _ stmt:instucciones* _
         { return nuevoNodo('Case', { tipo, exp, stmt }) }
 default
-    = _ tipo:"default" _ ":" _ stmt:instucciones* _
+    =  tipo:"default" _ ":" _ stmt:instucciones* _
         {return nuevoNodo('Case', { tipo, exp: null, stmt })  }
 
 for
@@ -157,7 +158,7 @@ ret
         { return nuevoNodo('Return', { exp }) }
 
 asignatura
-    = _ id:llamada _ op:("+="/"-="/"=") _ valor:expresion _ 
+    =  id:llamada _ op:("+="/"-="/"=") _ valor:expresion _ 
         { 
             if (id instanceof nodos.ReferenciaVariable){
              return  nuevoNodo('Asignacionvar', { id:id.id,op,valor }) 
@@ -221,25 +222,28 @@ Unarias
 llamada 
     =  objetivoInicial:datos operaciones:(
     ("(" _ args:Argumentos? _ ")" { return {args, tipo: 'funcCall' } })
-    / ("." _ id:id _ { return { id, tipo: 'Get' } }))* 
+    / ("." _ id:("length"/id/llamada) _ { return { id, tipo: 'Get' } }) 
+    / ("[" _ id:expresion _ "]" { return { id, tipo: 'Inarray' } })
+    )* 
   {
   const op =  operaciones.reduce(
     (objetivo, args) => {
       // return crearNodo('llamada', { callee, args: args || [] })
       const { tipo, id, args:argumentos } = args
-
       if (tipo === 'funcCall') {
         return nuevoNodo('Llamada', { callee: objetivo, args: argumentos || [] })
       }else if (tipo === 'Get') {
+        return nuevoNodo('Get', { objetivo, propiedad: id })
+      }else if (tipo === 'Inarray') {
         return nuevoNodo('Get', { objetivo, propiedad: id })
       }
     },
     objetivoInicial
   )
-   console.log('Llamada', {op}, {text: text()});
-
     return op
     }
+
+
 //Esta no es expresion
 sprint
     = "System.out.println" _ "(" _ args:Argumentos _ ")" _ ";" 
@@ -265,10 +269,22 @@ datos
     /instancia
     / char 
     /typeof 
+    /instanciaArray
     /idvalue
 
+
+//instancia para los arrays 2 casos
+// {primtivo, primitivo, primitivo}  o matriz { {primtivo, primitivo, primitivo}, {primtivo, primitivo, primitivo} }
+// new tipos/id []*
+
+instanciaArray
+    = "new" _ tip:(tipo / id) _ t:("[" _ exp:expresion _ "]" _{return exp})+  
+        { return nuevoNodo('Array', { tipo:tip, t }) }
+    /  "{" _ args:Argumentos _ "}" _
+        { return nuevoNodo('Array', { args }) }
+
 agrupacion 
-    = "(" _ exp:expresion _ ")" 
+    =  "(" _ exp:expresion _ ")" _
         {return  nuevoNodo('Agrupacion', { exp })}
 
 numeros 
