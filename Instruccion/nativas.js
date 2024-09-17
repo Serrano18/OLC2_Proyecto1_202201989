@@ -49,11 +49,11 @@ export const fnativas = {
         }
         return new Primitivo({valor: args[0].valor.toUpperCase(), tipo: 'string'})
     }),
-    'join': new Nativa(() => 2, (interprete,args) => {
+    'join': new Nativa(() => 1, (interprete,args) => {
         if (!(args[0] instanceof Primitivo)){
             throw new Error('Error el dato no es primitivo')
         }
-        if (!(args[0].value instanceof InstanciaA)){
+        if (!(args[0].valor instanceof InstanciaA)){
             throw new Error('Error el argumento no es un Array o Matriz')
         }
         return new Primitivo({
@@ -64,13 +64,25 @@ export const fnativas = {
         if (!(args[0] instanceof Primitivo)){
             throw new Error('Error el dato no es primitivo')
         }
-        if (!(args[0].value instanceof InstanciaA)){
+        if (!(args[0].valor instanceof InstanciaA)){
             throw new Error('Error el argumento no es un Array o Matriz')
         }
         return new Primitivo({
-            valor:args[0].valor.propiedades.findIndex(x => x.value == args[1].valor && x.tipo == tipo),
+            valor:args[0].valor.propiedades.findIndex(x => x.valor == args[1].valor && x.tipo == args[1].tipo),
             tipo: 'int'})
-    })
+    }),
+    'Object.keys': new Nativa(() => 1, (interprete,args) => {
+        if (!(args[0] instanceof Primitivo)){
+            throw new Error('Error el dato no es primitivo')
+        }
+        if (!(args[0].valor instanceof Instancia)){
+            throw new Error('Error el argumento no es un Array o Matriz')
+        }
+        return new Primitivo({
+            tipo: 'string',
+            valor: args[0].valor.propiedades.getAllVariableNames()
+        })
+    }),
 
     
 }

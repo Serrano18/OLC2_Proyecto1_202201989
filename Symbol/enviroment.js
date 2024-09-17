@@ -36,5 +36,19 @@ export class enviroment {
 
         throw new Error(`Variable ${nombre} no definida`);
     }
+    
+    getAllVariableNames() {
+        // Obtiene los nombres de las variables en el contexto actual
+        const currentNames = Object.keys(this.variables);
+        
+        // Si existe un contexto anterior (this.prev), concatena los nombres con el contexto anterior
+        if (this.prev) {
+            const prevNames = this.prev.getAllVariableNames();
+            return currentNames.concat(prevNames).join(', ');
+        }
+    
+        // Retorna los nombres actuales como un string separados por comas
+        return currentNames.join(', ');
+    }
 
 }

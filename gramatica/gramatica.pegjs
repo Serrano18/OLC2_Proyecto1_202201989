@@ -63,7 +63,7 @@ declaraciones
         
 
 declaracionstrucuts
-    = "struct" _ id:id _ "{" _ vars:(campos:declaracionvariables _ ";" {return campos})+ _ "}" _ ";" 
+    = "struct" _ id:id _ "{" _ vars:(campos:declaracionvariables _ ";" _ {return campos})+  "}" _ ";" 
         { return nuevoNodo('DeclaracionStruct', { id, vars }) }
 
 instancia
@@ -218,11 +218,15 @@ Unarias
     /"!" _ num:Unarias { return  nuevoNodo('Negacion', { op: '!', exp: num}) }
     /llamada
     / datos
-
+Marray
+    = m:("indexOf"/"join"/"Object.keys") arg:( "(" _ exp:expresion?_ ")" {return exp})?{
+        const valor = nuevoNodo('ReferenciaVariable', {id: m})
+        return nuevoNodo('Llamada', { callee: valor, args: arg ? [arg] : [] })
+    }
 llamada 
     =  objetivoInicial:datos operaciones:(
     ("(" _ args:Argumentos? _ ")" { return {args, tipo: 'funcCall' } })
-    / ("." _ id:("length"/id/llamada) _ { return { id, tipo: 'Get' } }) 
+    / ("." _ id:("length"/Marray/llamada/id) _ { return { id, tipo: 'Get' } }) 
     / ("[" _ id:expresion _ "]" { return { id, tipo: 'Inarray' } })
     )* 
   {
@@ -307,7 +311,8 @@ char
     = "'" (!"'" .) "'"     {return  nuevoNodo('Primitivo', { tipo: 'char', valor: text().slice(1, -1) })}
 
 idvalue
-     = id:id    {return  nuevoNodo('ReferenciaVariable', {id})}
+     =  id:id    
+        {return  nuevoNodo('ReferenciaVariable', {id})}
 
 id = ([a-zA-Z_])[a-zA-Z0-9_]* {return text()}
 tipo = "int" / "float" / "string" / "char" / "boolean"
