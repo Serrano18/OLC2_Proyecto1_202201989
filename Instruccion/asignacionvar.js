@@ -1,5 +1,4 @@
 import { Primitivo } from "../Compilador/nodos.js";
-import { agregarError } from "../index.js";
 export function asignav (valorn,valoractual,op){
     if( valorn.valor == null){
         return new Primitivo({valor:null , tipo: valoractual.tipo});

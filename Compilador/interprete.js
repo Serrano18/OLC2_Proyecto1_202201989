@@ -16,6 +16,7 @@ import {BreakException,ContinueException,ReturnException} from "../Instruccion/t
 import { iarray } from "../Instruccion/array.js";
 import { InstanciaA } from "../Instruccion/InstanciaA.js";
 import { ClonarA } from "../Instruccion/clonarA.js";
+import { ErrorData } from "../Symbol/errores.js";
 export class InterpreterVisitor extends BaseVisitor{
   constructor(){
     super()
@@ -26,6 +27,7 @@ export class InterpreterVisitor extends BaseVisitor{
     this.salida = '';
     this.prev = null;
     this.prevContinue = null;
+    this.simbolos = [];
   }
     interpretar(nodo){
       return nodo.accept(this)
@@ -102,7 +104,8 @@ export class InterpreterVisitor extends BaseVisitor{
         }else{
             // return new Primitivo({valor:null , tipo: exp.tipo});
       
-            throw new Error('Error en la operacion unaria tipos incorrectos');
+            throw new ErrorData('Error en la Oeracion Unaria',node.location)
+            
         }
 
     }
@@ -125,6 +128,23 @@ export class InterpreterVisitor extends BaseVisitor{
       }
       const result = dvariable(exp,node.tipo,node.id)
       this.entornoActual.setVariable(node.id,result)
+      let tipoS;
+      if (result != null){
+        if (result.valor instanceof InstanciaA) {
+          tipoS = "Array"
+        }else if (result.valor instanceof Instancia) {
+          tipoS = "Struct"
+        }else{
+          tipoS = "Variable"
+        }
+        
+      }
+      this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.tipo, linea: node.location.start.line, columna: node.location.start.column}) 
+      if (result != null){
+        if (result.valor == null){
+          throw new ErrorData('Variable definida con null tipos no coinciden',node.location)
+        }
+      }
     }
  /**
       * @type {BaseVisitor['visitReferenciaVariable']}
@@ -164,6 +184,11 @@ export class InterpreterVisitor extends BaseVisitor{
     let valoractual = this.entornoActual.getVariable(node.id)
     let valorfinal = asignav(valorn,valoractual,node.op)
     this.entornoActual.assignvariables(node.id,valorfinal)
+      if (valorfinal != null){
+        if (valorfinal.valor == null){
+          throw new ErrorData('Variable asignada con null tipos no coinciden',node.location)
+        }
+      }
   }
     /**
       * @type {BaseVisitor['visitBloque']}
@@ -183,7 +208,7 @@ export class InterpreterVisitor extends BaseVisitor{
   visitIf(node){
     const condicion = node.cond.accept(this)
     if(condicion.tipo !== 'boolean'){
-      throw new Error('Error en la condicion del if');
+      throw new ErrorData( 'Error en la condicion del if',node.location)
     }
     if(condicion.valor){
       return node.stmtTrue.accept(this)
@@ -198,7 +223,7 @@ export class InterpreterVisitor extends BaseVisitor{
   visitSwitch(node){
     let condicion = node.cond.accept(this)
     if(node.cases === null && node.def === null){
-      throw new Error('No se ha definido ningun caso y default')
+      throw new ErrorData('Error en el switch',node.location)
     }
     let estado = false
     const entornoAnterior = this.entornoActual;
@@ -266,7 +291,7 @@ export class InterpreterVisitor extends BaseVisitor{
         if (error instanceof ContinueException) {
             return this.visitWhile(node);
         }
-        throw error;
+        throw new ErrorData(error, node.location);
     }
   }
    /**
@@ -301,12 +326,12 @@ export class InterpreterVisitor extends BaseVisitor{
   visitForeach(node){
     let array;
     if (!node.va instanceof DeclaracionVariable){
-      throw new Error('Error en la variable del foreach');
+      throw new ErrorData('Error en variabel el foreach',node.location)
     }
       array = node.arr.accept(this);
     
     if(!array.valor instanceof Primitivo){
-      throw new Error('Error en el array del foreach');
+      throw new ErrorData('Error en array el foreach',node.location)
     }  
 
     if (array.valor instanceof InstanciaA) {
@@ -338,6 +363,9 @@ export class InterpreterVisitor extends BaseVisitor{
   visitDeclaFuncion(node) {
     const newfuncion = new dfuncion(node,this.entornoActual)
     this.entornoActual.setVariable(node.id,newfuncion)
+     let  tipoS = "Funcion"
+     this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.tipo, linea: node.location.start.line, columna: node.location.start.column}) 
+    
   }
     /**
       * @type {BaseVisitor['visitLlamada']}
@@ -403,7 +431,7 @@ export class InterpreterVisitor extends BaseVisitor{
   visitSprint(node){
     for (const exp of node.args) {
         let valor = exp.accept(this);
-        if (valor.tipo === 'string') {
+        if (valor.tipo === 'string' && valor.valor != null) {
           valor.valor = valor.valor.replace('\\n', '\n')
           valor.valor = valor.valor.replace('\\r', '\r')
           valor.valor = valor.valor.replace('\\"', '\"')
@@ -417,6 +445,8 @@ export class InterpreterVisitor extends BaseVisitor{
   visitDeclaracionStruct(node){
     const newstruct = new dstruct(node,this.entornoActual)
     this.entornoActual.setVariable(node.id, newstruct);
+    let  tipoS = "Struct"
+    this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.id, linea: node.location.start.line, columna: node.location.start.column}) 
   }
        
   

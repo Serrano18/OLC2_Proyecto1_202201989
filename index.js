@@ -13,30 +13,61 @@ const salida = document.getElementById('consoleOutput');
 let tabs = [];
 let activeTab = null;
 let errores = [];
-let tablaSimbolos = [];
+let simbolos = [];
 
-export function agregarError(descripcion, tipo, linea, columna) {
-    errores.push({
-        no: errores.length + 1,
-        descripcion,
-        tipo,
-        linea,
-        columna
-    });
-}
-export function agregarSimbolo(id, tipoSimbolo, tipoDato, linea, columna) {
-    tablaSimbolos.push({
-        no: tablaSimbolos.length + 1,
-        id,
-        tipoSimbolo,
-        tipoDato,
-        linea,
-        columna
-    });
-}
+
 function createRerrores(){
+
+    const tabla = document.getElementById('tablaErrores').getElementsByTagName('tbody')[0]; // Seleccionamos el tbody de la tabla
+    tabla.innerHTML = ''; // Limpiar contenido anterior
+
+    // Recorrer la lista de símbolos y agregar filas a la tabla
+    errores.forEach((e, index) => {
+        const row = tabla.insertRow(); // Crear una nueva fila en el tbody
+
+        // Insertar cada valor como una celda
+        // Insertar cada valor como una celda, índices empiezan desde 0
+        const cellNo = row.insertCell(0);    // Primera columna
+        const cellDescripcion = row.insertCell(1);    // Segunda columna
+        const cellTipo = row.insertCell(2);  // Cuarta columna
+        const cellLinea = row.insertCell(3);   // Quinta columna
+        const cellColumna = row.insertCell(4); // Sexta columna
+
+        // Asignar valores a las celdas
+        cellNo.textContent = index +1;
+        cellDescripcion.textContent = e.desc;
+        cellTipo.textContent = e.tipo;
+        cellLinea.textContent = e.linea;
+        cellColumna.textContent = e.columna;
+    });
+
 }
 function createRsimbolos(){
+    const tabla = document.getElementById('tablaSimbolos').getElementsByTagName('tbody')[0]; // Seleccionamos el tbody de la tabla
+    tabla.innerHTML = ''; // Limpiar contenido anterior
+
+    // Recorrer la lista de símbolos y agregar filas a la tabla
+    simbolos.forEach((simbolo, index) => {
+        const row = tabla.insertRow(); // Crear una nueva fila en el tbody
+
+        // Insertar cada valor como una celda
+        // Insertar cada valor como una celda, índices empiezan desde 0
+        const cellNo = row.insertCell(0);    // Primera columna
+        const cellId = row.insertCell(1);    // Segunda columna
+        const cellTipoSimbolo = row.insertCell(2); // Tercera columna
+        const cellTipoDato = row.insertCell(3);    // Cuarta columna
+        const cellLinea = row.insertCell(4);   // Quinta columna
+        const cellColumna = row.insertCell(5); // Sexta columna
+
+        // Asignar valores a las celdas
+        cellNo.textContent = index +1;
+        cellId.textContent = simbolo.id;
+        cellTipoSimbolo.textContent = simbolo.tsim;
+        cellTipoDato.textContent = simbolo.tipod;
+        cellLinea.textContent = simbolo.linea;
+        cellColumna.textContent = simbolo.columna;
+    });
+
 }
 
 
@@ -117,10 +148,8 @@ function updateEditor() {
 function run(){
     const code = document.getElementById('codeEditor').value;
     try {
-        console.log(code);
         const sentencias = parse(code);
         const interprete = new InterpreterVisitor();
-        console.log({sentencias})
         for (let i = 0; i < sentencias.length; i++) {
             try{
                 if (sentencias[i] !== undefined) {
@@ -131,11 +160,26 @@ function run(){
                 //console.log(interprete.salida)
             }catch(error){
                 console.log(error)
+                errores.push({
+                    desc: error.message || "Error desconocido",
+                    tipo: "Semantico", // Puedes agregar un tipo si lo deseas
+                    linea: error.location?.start.line || "Desconocido",
+                    columna: error.location?.start.column || "Desconocido"
+                });
             }
         }
+        
+        simbolos = interprete.simbolos;
  
     } catch (error) {
         console.log(error)
+        errores.push({
+            desc: error.message || "Error de parsing",
+            tipo: "Sintáctico",
+            linea: error.location?.start.line || "Desconocido",
+            columna: error.location?.start.column || "Desconocido"
+        });
+
         salida.innerHTML += error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
    }
 }

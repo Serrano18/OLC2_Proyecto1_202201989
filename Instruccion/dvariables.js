@@ -1,9 +1,10 @@
 import { Primitivo } from "../Compilador/nodos.js";
+import { ErrorData } from "../Symbol/errores.js";
 
 export function dvariable (exp,tipo,id){
     if (id == null){
         //error de id no reconocido
-        throw new Error("Error de id no reconocido");
+        throw new ErrorData("id no reconocido", exp.location);
     }
     //primitivo por defecto
     if (exp == null){
@@ -20,7 +21,7 @@ export function dvariable (exp,tipo,id){
         if (exp.valor != null){
             return exp;
         }else{
-            //ERROR POR QUE EN VAR DEBE DE TENER UN VALOR
+            throw new ErrorData("Variable no definida", exp.location);
         }
     }
 
