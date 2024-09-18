@@ -5,7 +5,6 @@
 ### Escuela de Ingeniería en Ciencias y Sistemas
 ### Organización de Lenguajes y Compiladores 2
 **Primer semestre 2024**
-
 **Catedráticos:** Ing. Bayron López, Ing. Edgar Saban, Ing. Luis Espino  
 **Tutores Académicos:** Henry Mendoza, Daniel Santos, Damián Peña  
 **Estudiante:** Maria Patricia Serrano Ramírez 202201989
