@@ -12,7 +12,7 @@ document.getElementById('run').addEventListener('click', run);
 const salida = document.getElementById('consoleOutput');
 let tabs = [];
 let activeTab = null;
-let errores = [];
+export let errores = [];
 let simbolos = [];
 
 
@@ -148,6 +148,7 @@ function updateEditor() {
 function run(){
     const code = document.getElementById('codeEditor').value;
     try {
+        errores = [];
         const sentencias = parse(code);
         const interprete = new InterpreterVisitor();
         for (let i = 0; i < sentencias.length; i++) {

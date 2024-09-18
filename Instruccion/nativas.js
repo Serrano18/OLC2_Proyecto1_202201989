@@ -3,6 +3,8 @@ import { Primitivo } from "../Compilador/nodos.js";
 import { iarray } from "./array.js";
 import { InstanciaA } from "./InstanciaA.js";
 import { Instancia } from "./instancia.js";
+import { errores } from "../index.js";
+import { ErrorData } from "../Symbol/errores.js";
 class Nativa extends Invocable {
     constructor(aridad, func) {
         super();
@@ -16,6 +18,12 @@ export const fnativas = {
     'parseInt': new Nativa(() => 1, (interprete,args) => {
         
         if(args[0].tipo != 'string'){  
+            errores.push({
+                desc: "Error en la conversion a string",
+                tipo: "Semantico", // Puedes agregar un tipo si lo deseas
+                linea: args[0].location?.start.line || "Desconocido",
+                columna:  args[0].location?.start.column || "Desconocido"
+            })
             return new Primitivo({valor: null, tipo: 'int'})
             //throw new Error('Error en la conversion a string')
           }
@@ -24,7 +32,12 @@ export const fnativas = {
     'parsefloat': new Nativa(() => 1, (interprete,args) => {
             
             if(args[0].tipo != 'string'){  
-                
+                errores.push({
+                    desc: "Error en la conversion a string",
+                    tipo: "Semantico", // Puedes agregar un tipo si lo deseas
+                    linea: args[0].location?.start.line || "Desconocido",
+                    columna:  args[0].location?.start.column || "Desconocido"
+                })
                 return new Primitivo({valor: null, tipo: 'float'})
                 //throw new Error('Error en la conversion a string')
             }
@@ -36,7 +49,12 @@ export const fnativas = {
     }),
     'toLowerCase': new Nativa(() => 1, (interprete,args) => {
         if(args[0].tipo != 'string'){  
-            
+            errores.push({
+                desc: "Error en la conversion a string",
+                tipo: "Semantico", // Puedes agregar un tipo si lo deseas
+                linea: args[0].location?.start.line || "Desconocido",
+                columna:  args[0].location?.start.column || "Desconocido"
+            })
              return new Primitivo({valor: null, tipo: 'string'})
             //throw new Error('Error en la conversion a string')
         }
@@ -44,6 +62,12 @@ export const fnativas = {
     }),
     'toUpperCase': new Nativa(() => 1, (interprete,args) => {
         if(args[0].tipo != 'string'){  
+            errores.push({
+                desc: "Error en la conversion a string",
+                tipo: "Semantico", // Puedes agregar un tipo si lo deseas
+                linea: args[0].location?.start.line || "Desconocido",
+                columna:  args[0].location?.start.column || "Desconocido"
+            })
             return new Primitivo({valor: null, tipo: 'string'})
             //throw new Error('Error en la conversion a string')
         }
@@ -51,10 +75,10 @@ export const fnativas = {
     }),
     'join': new Nativa(() => 1, (interprete,args) => {
         if (!(args[0] instanceof Primitivo)){
-            throw new Error('Error el dato no es primitivo')
+            throw new ErrorData('Error el dato no es primitivo',args[0].location)
         }
         if (!(args[0].valor instanceof InstanciaA)){
-            throw new Error('Error el argumento no es un Array o Matriz')
+            throw new ErrorData('Error el argumento no es un Array o Matriz',args[0].location)
         }
         return new Primitivo({
             valor: args[0].valor.propiedades.map((x) => x.valor).join(','),
@@ -62,10 +86,10 @@ export const fnativas = {
     }),
     'indexOf': new Nativa(() => 2, (interprete,args) => {
         if (!(args[0] instanceof Primitivo)){
-            throw new Error('Error el dato no es primitivo')
+            throw new ErrorData('Error el dato no es primitivo',args[0].location)
         }
         if (!(args[0].valor instanceof InstanciaA)){
-            throw new Error('Error el argumento no es un Array o Matriz')
+            throw new ErrorData('Error el argumento no es un Array o Matriz',args[0].location)
         }
         return new Primitivo({
             valor:args[0].valor.propiedades.findIndex(x => x.valor == args[1].valor && x.tipo == args[1].tipo),
@@ -73,10 +97,10 @@ export const fnativas = {
     }),
     'Object.keys': new Nativa(() => 1, (interprete,args) => {
         if (!(args[0] instanceof Primitivo)){
-            throw new Error('Error el dato no es primitivo')
+            throw new ErrorData('Error el dato no es primitivo',args[0].location)
         }
         if (!(args[0].valor instanceof Instancia)){
-            throw new Error('Error el argumento no es un Array o Matriz')
+            throw new ErrorData('Error el argumento no es un Array o Matriz',args[0].location)
         }
         return new Primitivo({
             tipo: 'string',
