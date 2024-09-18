@@ -127,7 +127,7 @@ export class InterpreterVisitor extends BaseVisitor{
         }
       }
       const result = dvariable(exp,node.tipo,node.id)
-      this.entornoActual.setVariable(node.id,result)
+      this.entornoActual.setVariable(node.id,result,node.location)
       let tipoS;
       if (result != null){
         if (result.valor instanceof InstanciaA) {
@@ -137,14 +137,10 @@ export class InterpreterVisitor extends BaseVisitor{
         }else{
           tipoS = "Variable"
         }
-        
+        this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.tipo, linea: node.location.start.line, columna: node.location.start.column}) 
       }
-      this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.tipo, linea: node.location.start.line, columna: node.location.start.column}) 
-      if (result != null){
-        if (result.valor == null){
-          throw new ErrorData('Variable definida con null tipos no coinciden',node.location)
-        }
-      }
+  
+      
     }
  /**
       * @type {BaseVisitor['visitReferenciaVariable']}
@@ -362,7 +358,7 @@ export class InterpreterVisitor extends BaseVisitor{
       */
   visitDeclaFuncion(node) {
     const newfuncion = new dfuncion(node,this.entornoActual)
-    this.entornoActual.setVariable(node.id,newfuncion)
+    this.entornoActual.setVariable(node.id,newfuncion,node.location)
      let  tipoS = "Funcion"
      this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.tipo, linea: node.location.start.line, columna: node.location.start.column}) 
     
@@ -445,8 +441,8 @@ export class InterpreterVisitor extends BaseVisitor{
   visitDeclaracionStruct(node){
     const newstruct = new dstruct(node,this.entornoActual)
     this.entornoActual.setVariable(node.id, newstruct);
-    let  tipoS = "Struct"
-    this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.id, linea: node.location.start.line, columna: node.location.start.column}) 
+   // let  tipoS = "Struct"
+    //this.simbolos.push({id: node.id, tsim: tipoS, tipod: node.id, linea: node.location.start.line, columna: node.location.start.column}) 
   }
        
   
@@ -483,7 +479,7 @@ export class InterpreterVisitor extends BaseVisitor{
   visitDeclaracionStruct(node){
     //verificar que sea el entono global pendiente  error
     const struct = new dstruct(node,this.entornoActual)
-    this.entornoActual.setVariable(node.id, struct);
+    this.entornoActual.setVariable(node.id, struct,node.location);
   }
   /**
      * @type {BaseVisitor['visitInstancia']}

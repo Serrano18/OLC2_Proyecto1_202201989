@@ -1,3 +1,5 @@
+import { ErrorData } from "../Symbol/errores.js";
+
 export class enviroment {
   constructor(padre = null) {
     this.name = "";
@@ -6,9 +8,9 @@ export class enviroment {
     }
 
 
-    setVariable(name, value) {
+    setVariable(name, value,location) {
         if (this.variables.hasOwnProperty(name)) {
-            throw new Error(`La variable ${name} ya ha sido declarada`);
+            throw new ErrorData('La variable ya ha sido declarada',location);
         }
         this.variables[name] = value;
     }
